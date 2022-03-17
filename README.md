@@ -32,8 +32,8 @@ Invoke-HuntPersistPR.psm1<br>
                 
 ## Collection Modules
 Below is a summary of the currently supported collection modules.
-|Module|MITRE ID|Description|Collection Method
-|:--------------------------------|:-----------|:-----------|:-----------|
+|Module<Br>Name|Mitre ATT&CK ID|Module<br>Description|Collection<br>Method
+|:-------------------------------------------------------|:-----------|:-----------|:-----------|
 |collect-tasks|T1053.002|Collects Windows scheduled task information.|Get-ScheduledTask
 |collect-services|T1569.002|Collects Windows service information.|Get-WmiObject -Class win32_service
 |collect-wmi-providers|T1047|Collects WMI provider information.|Get-WmiObject -Class __Win32Provider
