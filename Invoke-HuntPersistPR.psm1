@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version 0.15
+# Version 0.16
 # This can from a non-domain system to identify available management ports on domain systems.
 function Invoke-HuntPersistPR
 {    
@@ -10,6 +10,7 @@ function Invoke-HuntPersistPR
    # on a non domain system
    runas /netonly /user:domain\user powershell.exe
    Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp\test -DomainController 10.1.1.1 -Username domain\user -password 'password'
+   Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp\test -DomainController 10.1.1.1 -Credential domain\user
    
    # on a domain system
    Invoke-HuntPersistPR -OutputDirectory "c:\temp\now" -Threads 100 -DomainController 10.1.1.1
@@ -430,11 +431,11 @@ function Invoke-HuntPersistPR
 
             try{
                 # Try without ssl
-                New-PSSession -ErrorAction SilentlyContinue -ComputerName $_.ComputerName | Out-Null  
+                New-PSSession -ErrorAction SilentlyContinue -ComputerName $_.ComputerName -Credential $Credential | Out-Null  
             }catch{
                 # Try with ssl if not access denied
                 if ($Error[0] -notlike "*Access is denied.*"){                                 
-                    New-PSSession -UseSSL -ErrorAction SilentlyContinue -ComputerName $_.ComputerName  | Out-Null              
+                    New-PSSession -UseSSL -ErrorAction SilentlyContinue -ComputerName $_.ComputerName -Credential $Credential  | Out-Null              
                 }
             }
         }
