@@ -52,7 +52,6 @@ Below is a summary framework's directory structure.
 |Path|Description
 |:-------------------------------------------------------|:-----------
 |Invoke-HuntPersistPR.psm1|This the primary script.
-|\windows\modules|This contains all Windows modules.
 |\windows\modules\collection|This contains all Windows collection modules. Collection modules can be added here and run against targets without additional code changes to the primary script.
 |\windows\modules\analysis|This contains all Windows analysis modules. Analysis modules can be added here and run against targets without additional code changes to the primary script.
                 
