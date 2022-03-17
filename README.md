@@ -51,3 +51,12 @@ Invoke-HuntPersistPR.psm1<br>
 * File owner outliers (stacking)
 * File path outliers  (stacking)
 
+## Script Authors
+### Primary
+Scott
+### Secondardy
+These individuals wrote open source code that were used as part of this project.
+Eric<br>
+BoeProx<br>
+Will Schroeder<br>
+Rampling CookieMonster<br>
