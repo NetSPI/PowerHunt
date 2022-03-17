@@ -126,7 +126,7 @@ Below is a summary of the currently supported analysis modules.
 Scott Sutherland (@_nullbind) <Br>
 ![Twitter Follow](https://img.shields.io/twitter/follow/_nullbind.svg?style=social)
 ### Secondardy
-These individuals wrote open source code that was used as part of this project.<br>
+These individuals wrote open source code that was used as part of this project. A big thank you goes out them and their work!<br>
 |Name|Site|
 |:--------------------------------|:-----------|
 |Eric Gruber (@egru)|https://github.com/NetSPI/PESecurity
