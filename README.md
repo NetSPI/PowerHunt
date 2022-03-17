@@ -13,6 +13,7 @@ Invoke-HuntPersistPR is a PowerShell framework designed to use PowerShell Remoti
 
 ## Command Examples
 
+### Domain Joined System
 #### Example 1
 The example below shows the syntax for running the script from a domain joined system without providing alternative credentials or a specific domain controller.
 <pre>
@@ -25,7 +26,8 @@ The example below shows the syntax for running the script from a domain joined s
 Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1
 </pre> 
 
-#### Example 3
+### Non Domain Joined System
+#### Example 1
 The example below shows the syntax for running the script from a system that has NOT been joined to the target domain.
 <pre>
 runas /netonly /user:domain\user powershell.exe
