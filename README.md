@@ -31,16 +31,18 @@ Invoke-HuntPersistPR.psm1<br>
 \windows\modules\analysis<br>
                 
 ## Collection Modules
-* Windows services
-* Windows scheduled tasks
-* WMI providers
-* WMI subscriptions
-* Startup Files: Starup Folders
-* Startup Registry: Run keys
-* Installed software
-* Named pipes
-* Event 4732 (A member was added to a security-enabled local group)
-* Event 1102 (Audit log cleared)
+|Module|MITRE ID|Description|Collection Method
+|:--------------------------------|:-----------|:-----------|:-----------|
+|collect-tasks|T1053.002|Collects Windows scheduled task information.|Get-ScheduledTask
+|collect-services|T1569.002|Collects Windows service information.|Get-WmiObject -Class win32_service
+|collect-wmi-providers|T1047|Collects WMI provider information.|Get-WmiObject -Class __Win32Provider
+|collect-wmi-subscription|T1546.003|WMI Subscriptions|Collects WMI subscription information.|Get-WmiObject -Namespace root/subscription
+|collect-startup-files-allusers|T1547.001|Collect information from all users startup folders|$env:ALLUSERSPROFILE\Microsoft\Windows\Start Menu\Programs\StartUp\
+|collect-startup-registry-run|T1547.001|Collect information from registry run keys|HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\
+|collect-installed-software|T1505|Installed Software|Get-Software
+|collect-named-pipes|T1570|Collect information from named pipes|Get-ChildItem \\.\pipe\
+|T1136.001|Event 4732|Collect information from 4732 events (member added to security-enabled local group)|Get-WinEvent -FilterHashtable @{logname="security"; id="4732"}
+|T1070.001|Event 1102|Collect information from 1102 events (audit log cleared)|Get-WinEvent -FilterHashtable @{logname="security"; id="1102"}
 
 ## Analysis Modules / Filters
 * LOLBAS
