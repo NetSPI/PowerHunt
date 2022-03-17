@@ -57,8 +57,7 @@ Below is a summary framework's directory structure.
 |\windows\modules\analysis|This contains all Windows analysis modules. Analysis modules can be added here and run against targets without additional code changes to the primary script.
                 
 ## Collection Modules
-Collection modules are used query data from target systems.  They typically target a single data source. <br>
-Below is a summary of the currently supported collection modules. 
+Collection modules are used query data from target systems.  They typically target a single data source. Below is a summary of the currently supported collection modules. 
 |Module<Br>Name|Mitre ATT&CK ID|Module<br>Description|Collection<br>Method
 |:-------------------------------------------------------|:-----------|:-----------|:-----------|
 |collect-tasks|T1053.002|Collects Windows scheduled task information.|Get-ScheduledTask
