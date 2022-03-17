@@ -72,7 +72,7 @@ Below is a summary of the currently supported collection modules.
 |collect-events-4732|T1136.001|Event 4732|Collect information from 4732 events (member added to security-enabled local group)|Get-WinEvent -FilterHashtable @{logname="security"; id="4732"}
 |collect-events-1102|T1070.001|Event 1102|Collect information from 1102 events (audit log cleared)|Get-WinEvent -FilterHashtable @{logname="security"; id="1102"}
   
-#### Adding New Modules
+#### Adding New Collection Modules
 All collection modules are automatically loaded from the windows\modules\collection folder and ran against established PowerShell Remoting systems. You can add your own there and they will be run automatically.
 
 ## Analysis Modules 
@@ -114,7 +114,7 @@ Analysis modules are used to filter collected data in a way that makes it easier
 |analysis-named-pipes-known-bad|tbd|collect-named-pipes
 |analysis-events-4732-add-user|tbd|collect-events-4732
 
-#### Adding New Modules
+#### Adding New Analysis Modules
 All analysis modules are automatically loaded from the windows\modules\analysis folder and ran offline against collected data sources based on matching module names. For example, all analysis modules that start with "analysis-tasks" will be ran against the "collect-tasks" data source. It's not very elegant, but it'ss functional and seems to make adding new modules easy as long as you name them correctly. :)
   
 Below is a summary of the currently supported analysis modules.   
