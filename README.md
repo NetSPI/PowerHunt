@@ -53,7 +53,8 @@ Invoke-HuntPersistPR.psm1<br>
 
 ## Script Authors
 ### Primary
-Scott Sutherland (@_nullbind) ![Twitter Follow](https://img.shields.io/twitter/follow/_nullbind.svg?style=social)
+Scott Sutherland (@_nullbind) <Br>
+![Twitter Follow](https://img.shields.io/twitter/follow/_nullbind.svg?style=social)
 ### Secondardy
 These individuals wrote open source code that was used as part of this project.<br>
 |Name|Site|
