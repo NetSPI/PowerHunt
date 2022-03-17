@@ -36,7 +36,7 @@ Invoke-HuntPersistPR.psm1<br>
 |collect-tasks|T1053.002|Collects Windows scheduled task information.|Get-ScheduledTask
 |collect-services|T1569.002|Collects Windows service information.|Get-WmiObject -Class win32_service
 |collect-wmi-providers|T1047|Collects WMI provider information.|Get-WmiObject -Class __Win32Provider
-|collect-wmi-subscription|T1546.003|WMI Subscriptions|Collects WMI subscription information.|Get-WmiObject -Namespace root/subscription
+|collect-wmi-subscriptions|T1546.003|WMI Subscriptions|Collects WMI subscription information.|Get-WmiObject -Namespace root/subscription
 |collect-startup-files-allusers|T1547.001|Collect information from all users startup folders|$env:ALLUSERSPROFILE\Microsoft\Windows\Start Menu\Programs\StartUp\
 |collect-startup-registry-run|T1547.001|Collect information from registry run keys|HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\
 |collect-installed-software|T1505|Installed Software|Get-Software
