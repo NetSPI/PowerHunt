@@ -104,6 +104,7 @@ Below is a summary of the currently supported analysis modules.
 |analysis-events-4732-add-user|tbd|collect-events-4732
 
 ## TODO
+* Finalize credentials passthrough to ldap and remoting sessions
 * Finish adding analysis modules
 * Create an HTML summary report
   
