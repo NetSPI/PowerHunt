@@ -47,10 +47,6 @@ runas /netonly /user:domain\user powershell.exe
 Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Credentials domain\user
 </pre> 
 
-## Command Benchmarks
-* Based on initial testing, data collection can be completed from approximetly 2000 systems an hour.
-* Please note that if analysis modules are not disabled, time to script completion may be longer.
-
 ## Framework Structure Summary
 Below is a summary framework's directory structure.
 |Path|Description
@@ -115,6 +111,10 @@ Below is a summary of the currently supported analysis modules.
 |analysis-installed-software-offsec-software|tbd|collect-installed-software
 |analysis-named-pipes-known-bad|tbd|collect-named-pipes
 |analysis-events-4732-add-user|tbd|collect-events-4732
+  
+## Command Benchmarks
+* Based on initial testing, data collection can be completed from approximetly 2000 systems an hour.
+* Please note that if analysis modules are not disabled, time to script completion may be longer.
 
 ## TODO
 * Finalize credentials passthrough to ldap and remoting sessions
