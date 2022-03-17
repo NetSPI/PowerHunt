@@ -49,7 +49,7 @@ Below is a summary of the currently supported collection modules.
 |collect-events-1102|T1070.001|Event 1102|Collect information from 1102 events (audit log cleared)|Get-WinEvent -FilterHashtable @{logname="security"; id="1102"}
 
 ## Analysis Modules 
-Analysis modules are use to filter the collected data it way that make it easier to find known threats, suspicious behavior, and environmental anomalies.
+Analysis modules are used to filter collected data in a way that makes it easier to find known threats, suspicious behavior, and environmental anomalies.  Additionally, the .csv files generated from the filtering can be consumed by another tool like Jupyter notebooks.
 Below is a summary of the currently supported analysis modules. 
 |Module<br>Name|Module<br>Description|Data Source
 |:-------------------------------------------------------|:-----------|:-----------|
