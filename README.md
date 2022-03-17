@@ -33,7 +33,8 @@ Below is a summary framework's directory structure.
 |\windows\modules\analysis|This contains all Windows analysis modules. Analysis modules can be added here and run against targets without additional code changes to the primary script.
                 
 ## Collection Modules
-Below is a summary of the currently supported collection modules.
+Collection modules are used query data from target systems.  They typically target a single data source. <br>
+Below is a summary of the currently supported collection modules. 
 |Module<Br>Name|Mitre ATT&CK ID|Module<br>Description|Collection<br>Method
 |:-------------------------------------------------------|:-----------|:-----------|:-----------|
 |collect-tasks|T1053.002|Collects Windows scheduled task information.|Get-ScheduledTask
@@ -47,14 +48,45 @@ Below is a summary of the currently supported collection modules.
 |collect-events-4732|T1136.001|Event 4732|Collect information from 4732 events (member added to security-enabled local group)|Get-WinEvent -FilterHashtable @{logname="security"; id="4732"}
 |collect-events-1102|T1070.001|Event 1102|Collect information from 1102 events (audit log cleared)|Get-WinEvent -FilterHashtable @{logname="security"; id="1102"}
 
-## Analysis Modules / Filters
-* LOLBAS
-* Remote management software
-* Known bad named pipes
-* Unsigned binaries
-* .net binaries
-* File owner outliers (stacking)
-* File path outliers  (stacking)
+## Analysis Modules 
+Analysis modules are use to filter the collected data it way that make it easier to find known threats, suspicious behavior, and environmental anomalies.
+Below is a summary of the currently supported analysis modules. 
+|Module<br>Name|Module<br>Description|Data Source
+|:-------------------------------------------------------|:-----------|:-----------|
+|analysis-services-lolbas|tbd|collect-services
+|analysis-services-mgmt-software|tbd|collect-services
+|analysis-services-offsec-software|tbd|collect-services
+|analysis-services-unsigned|tbd|collect-services
+|analysis-services-dotnet|tbd|collect-services
+|analysis-services-badpath|tbd|collect-services
+|analysis-services-outlier-filepath|tbd|collect-services
+|analysis-services-outlier-owner|tbd|collect-services
+|analysis-tasks-lolbas|tbd|collect-tasks
+|analysis-tasks-mgmt-software|tbd|collect-tasks
+|analysis-tasks-offsec-software|tbd|collect-tasks
+|analysis-tasks-unsigned|tbd|collect-tasks
+|analysis-tasks-dotnet|tbd|collect-tasks
+|analysis-tasks-badpath|tbd|collect-tasks
+|analysis-tasks-outlier-filepath|tbd|collect-tasks
+|analysis-tasks-outlier-owner|tbd|collect-tasks
+|analysis-startup-registry-run-lolbas|tbd|collect-startup-registry-run
+|analysis-startup-registry-run-mgmt-software|tbd|collect-startup-registry-run
+|analysis-startup-registry-run-offsec-software|tbd|collect-startup-registry-run
+|analysis-startup-registry-run-unsigned|tbd|collect-startup-registry-run
+|analysis-startup-registry-run-dotnet|tbd|collect-startup-registry-run
+|analysis-startup-registry-run-badpath|tbd|collect-startup-registry-run
+|analysis-startup-registry-run-outlier-owner|tbd|collect-startup-registry-run
+|analysis-startup-files-allusers-lolbas|tbd|collect-startup-files-allusers
+|analysis-startup-files-allusers-mgmt-software|tbd|collect-startup-files-allusers
+|analysis-startup-files-allusers-offsec-software|tbd|collect-startup-files-allusers
+|analysis-startup-files-allusers-unsigned|tbd|collect-startup-files-allusers
+|analysis-startup-files-allusers-dotnet|tbd|collect-startup-files-allusers
+|analysis-startup-files-allusers-badpath|tbd|collect-startup-files-allusers
+|analysis-startup-files-allusers-outlier-owner|tbd|collect-startup-files-allusers
+|analysis-installed-software-mgmt-software|tbd|collect-installed-software
+|analysis-installed-software-offsec-software|tbd|collect-installed-software
+|analysis-named-pipes-known-bad|tbd|collect-named-pipes
+|analysis-events-4732-add-user|tbd|collect-events-4732
 
 ## Script Authors
 ### Primary
