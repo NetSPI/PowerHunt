@@ -125,6 +125,9 @@ Below is a summary of the currently supported analysis modules.
 * Finalize credentials passthrough to ldap and remoting sessions
 * Finish adding analysis modules
 * Create an HTML summary report
+* add task author and userid mismatch test
+* add task owner outliers
+* add task creation outliers
   
 ## Script Authors
 ### Primary
