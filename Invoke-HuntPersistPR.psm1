@@ -1,8 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version 0.16
-# This can from a non-domain system to identify available management ports on domain systems.
+# Version: 0.20
 function Invoke-HuntPersistPR
 {    
    <#
@@ -11,7 +10,7 @@ function Invoke-HuntPersistPR
    runas /netonly /user:domain\user powershell.exe
    Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp\test -DomainController 10.1.1.1 -Username domain\user -password 'password'
    Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp\test -DomainController 10.1.1.1 -Credential domain\user
-   
+
    # on a domain system
    Invoke-HuntPersistPR -OutputDirectory "c:\temp\now" -Threads 100 -DomainController 10.1.1.1
    or
@@ -76,7 +75,7 @@ function Invoke-HuntPersistPR
         # Check for modules direcroty 
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
         if(Test-Path .\windows\modules){
-         Write-Output " [+][$Time] The windows\modules directory was found."
+         # Write-Output " [+][$Time] The windows\modules directory was found."
         }else{
          Write-Output " [x][$Time] The windows\modules directory was not found."
          Write-Output " [!][$Time] Aborting operation."
@@ -86,8 +85,7 @@ function Invoke-HuntPersistPR
         # Get start time
         $StartTime = Get-Date
 	    $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-        Write-Output " [+][$Time] Test Start"
-        Write-Output " [-][$Time] All results will be written to the directory $OutputDirectory"
+        Write-Output " [+][$Time] Starting active test"        
         $StopWatch =  [system.diagnostics.stopwatch]::StartNew()
 
         Write-Output " -------------------------------------------"
@@ -107,19 +105,19 @@ function Invoke-HuntPersistPR
 
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             Write-Output " [+][$Time] Confirmed local administrative privileges."  
-            Write-Output " [-][$Time] Checking if PS Remoting is enabled..."
+            Write-Output " [+][$Time] Checking if PS Remoting is enabled..."
             
             # Check if ps remoting is enabled
             try{
 
                 # Test connection
                 Test-WSMan -ComputerName $env:COMPUTERNAME | Out-Null
-                Write-Output " [+][$Time] PSRemoting appears to be enabled."
+                Write-Output " [+][$Time] PS Remoting appears to be enabled."
             }catch{
 
                 # Enable ps remoting
                 Write-Output " [x][$Time] PSRemoting appears to be disabled."
-                Write-Output " [-][$Time] Enabling PSRemoting..."
+                Write-Output " [+][$Time] Enabling PSRemoting..."
                 
                 #Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private -ErrorAction SilentlyContinue
                 Enable-PSRemoting -Force -SkipNetworkProfileCheck -ErrorAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
@@ -130,10 +128,10 @@ function Invoke-HuntPersistPR
                
             # Trust all hosts
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [-][$Time] Trust configuration check..." 
+            # Write-Output " [+][$Time] Trust configuration check..." 
             try{           
                 Set-Item WSMan:localhost\client\trustedhosts -value * -Force -ErrorAction SilentlyContinue | Out-Null
-                Write-Output " [+][$Time] Trust configuration updated successfully."
+                # Write-Output " [+][$Time] Trust configuration updated successfully."
             }catch{
                 Write-Output " [x][$Time] Trust configuration update failed."
                 Write-Output " [!][$Time] Aborting operation."
@@ -168,7 +166,7 @@ function Invoke-HuntPersistPR
         Write-Output " -------------------------------------------"       
 
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-        Write-Output " [-][$Time] Attempting to access domain controller..."          
+        Write-Output " [+][$Time] Attempting to access domain controller..."          
         $DCRecord = Get-LdapQuery -LdapFilter "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" -DomainController $DomainController -Username $username -Password $Password -Credential $Credential | select -first 1 | select properties -expand properties -ErrorAction SilentlyContinue
         [string]$DCHostname = $DCRecord.dnshostname
         [string]$DCCn = $DCRecord.cn
@@ -187,7 +185,7 @@ function Invoke-HuntPersistPR
         # Verify output directory exists
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
         if(Test-Path $OutputDirectory){
-            Write-Output " [+][$Time] The $OutputDirectory directory was found."
+            # Write-Output " [+][$Time] The $OutputDirectory directory was found."
             
             # Create sub directory for output
             try{
@@ -206,7 +204,7 @@ function Invoke-HuntPersistPR
         }
 
         # Status user
-        Write-Output " [-][$Time] Performing LDAP query for computers associated with the $TargetDomain domain"
+        Write-Output " [+][$Time] Performing LDAP query for computers associated with the $TargetDomain domain"
 
         # Get domain computers        
         $DomainComputersRecord = Get-LdapQuery -LdapFilter "(objectCategory=Computer)" -DomainController $DomainController -Username $username -Password $Password
@@ -226,11 +224,13 @@ function Invoke-HuntPersistPR
         Write-Output " [+][$Time] - $ComputerCount computers found"
 
         # Save results
-        Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers.csv"
+        # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers.csv"
         $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers.csv"
-       # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
+        # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
         $DomainComputersFile = "$TargetDomain-Domain-Computers.csv"
         #$DomainComputersFileH = "$TargetDomain-Domain-Computers.html"
+
+        Write-Output " [+][$Time] All results will be written to the directory $OutputDirectory"
 
         # ----------------------------------------------------------------------
         # Identify computers that respond to ping reqeusts
@@ -242,7 +242,7 @@ function Invoke-HuntPersistPR
 
         # Status user
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-        Write-Output " [-][$Time] Pinging $ComputerCount computers"
+        Write-Output " [+][$Time] Pinging $ComputerCount computers"
 
         # Ping computerss
         $PingResults = $DomainComputers | Invoke-Ping -Throttle $GlobalThreadCount
@@ -277,7 +277,7 @@ function Invoke-HuntPersistPR
 
         # Save results
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-        Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Pingable.csv"
+        # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Pingable.csv"
         $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-Pingable.csv"
         #$null = Convert-DataTableToHtmlTable -DataTable $ComputersPingable -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers-Pingable.html" -Title "Domain Computers: Ping Response" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain that responded to ping requests."
         $ComputersPingableFile = "$TargetDomain-Domain-Computers-Pingable.csv"
@@ -295,7 +295,7 @@ function Invoke-HuntPersistPR
 
         # Status user
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-        Write-Output " [-][$Time] Checking if TCP Port 5985 (NonSSL) is open on $ComputerPingableCount computers"
+        Write-Output " [+][$Time] Checking if TCP Port 5985 (NonSSL) is open on $ComputerPingableCount computers"
 
         # Get clean list of pingable computers
         $ComputersPingableClean = $ComputersPingable | Select-Object ComputerName
@@ -338,7 +338,7 @@ function Invoke-HuntPersistPR
         Write-Output " [+][$Time] - $Computers5985OpenCount computers have TCP port 5985 open."                
 
         # Save results
-        Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5985.csv"        
+        # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5985.csv"        
         $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-Open5985.csv"
         #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
         $Computers5985OpenFile = "$TargetDomain-Domain-Computers-Open5985.csv"
@@ -350,7 +350,7 @@ function Invoke-HuntPersistPR
 
         # Status user
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-        Write-Output " [-][$Time] Checking if TCP Port 5986 (SSL) is open on $ComputerPingableCount computers"
+        Write-Output " [+][$Time] Checking if TCP Port 5986 (SSL) is open on $ComputerPingableCount computers"
 
         # Get clean list of pingable computers
         $ComputersPingableClean = $ComputersPingable | Select-Object ComputerName
@@ -393,7 +393,7 @@ function Invoke-HuntPersistPR
         Write-Output " [+][$Time] - $Computers5986OpenCount computers have TCP port 5986 open."            
 
         # Save results
-        Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5986.csv"        
+        # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5986.csv"        
         $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-Open5986.csv"
         #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
         $Computers5986OpenFile = "$TargetDomain-Domain-Computers-Open5986.csv"
@@ -410,7 +410,7 @@ function Invoke-HuntPersistPR
         }else{
 
             # Combine host lists
-            Write-Output " [-][$Time] - Creating PS Remoting Target List."
+            Write-Output " [+][$Time] Creating PS Remoting Target List."
             $PsRemotingTargetsAll = $Computers5986Open + $Computers5985Open
             $PsRemotingTargetsAll = $PsRemotingTargetsAll | select computername -Unique
             $PsRemotingTargetsAllCount = $PsRemotingTargetsAll | measure | select count -ExpandProperty count
@@ -418,14 +418,14 @@ function Invoke-HuntPersistPR
             # Save results
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             Write-Output " [+][$Time] - $PsRemotingTargetsAllCount computers will be targeted."
-            Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-PsRemoting.csv"        
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-PsRemoting.csv"        
             $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-PsRemoting.csv"        
         }
 
         Write-Output " -------------------------------------------"
         Write-Output " COLLECTION: ESTABLISH PS REMOTING SESSIONS"
         Write-Output " -------------------------------------------"
-        Write-Output " [-][$Time] - Attempting to establish PS Remoting sessions against $PsRemotingTargetsAllCount systems."
+        Write-Output " [+][$Time] - Attempting to establish PS Remoting sessions with $PsRemotingTargetsAllCount systems."
         $PsRemotingTargetsAll | select ComputerName | 
         Foreach{
 
@@ -476,20 +476,20 @@ function Invoke-HuntPersistPR
             $ModuleStartTime = Get-Date
 
             # Run module
-            Write-Output " [-][$Time] $ModuleName ($CurrentModulesCount of $CollectionModulesCount)"
-            Write-Output " [-][$Time] - Running module..."
+            Write-Output " [+][$Time] ($CurrentModulesCount of $CollectionModulesCount) $ModuleName"
+            # Write-Output " [+][$Time] - Running module..."
             $MyCommand = Get-Content $_.fullname -Raw
             $Results = Invoke-Command -Session (Get-PSSession | where state -like "Opened") -ScriptBlock {Invoke-Expression -Command  "$args"} -ArgumentList $MyCommand -ErrorAction SilentlyContinue
             $ModuleStopTime = Get-Date
             $ModuleDuration = $ModuleStopTime - $ModuleStartTime
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] - Completed"
-            Write-Output " [+][$Time] - Duration: $ModuleDuration"
+            # Write-Output " [+][$Time] - Completed"
+            # Write-Output " [+][$Time] - Duration: $ModuleDuration"
 
             # Save output
             $FileName = $_.name -replace(".ps1",".csv")
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-$FileName"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-$FileName"
             $Results | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-$FileName"
 
         }
@@ -497,7 +497,76 @@ function Invoke-HuntPersistPR
         Write-Output " -------------------------------------------"
         Write-Output " ANALYSIS: RUN ALL MODULES"
         Write-Output " -------------------------------------------"
-        Write-Output " TBD - TARGET PS REMOTING SYSTEMS"
+
+        # Get list of collection modules
+        $CollectionModules = Get-ChildItem .\windows\modules\collection 
+        $CollectionModulesCount = $CollectionModules | measure | select count -ExpandProperty count 
+        
+        # Get analysis module count
+        $AnalysisModules = Get-ChildItem .\windows\modules\analysis 
+        $AnalysisModulesCount = $AnalysisModules | measure | select count -ExpandProperty count
+        Write-Output " [+][$Time] $AnalysisModulesCount analysis modules will be run against $CollectionModulesCount data sources."       
+
+        # Review each collection module data source
+        $CollectionModulesCountP = 0
+        $CollectionModules | 
+        foreach{
+            
+            # Data Source Counter
+            $CollectionModulesCountP = $CollectionModulesCountP + 1                                      
+   
+            # Parse module name from file
+            $CollectionDataSource = $_.name -replace(".ps1","") -replace("collect-","")
+            $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+            Write-Output " [+][$Time] Data Source ($CollectionModulesCountP of $CollectionModulesCount): $CollectionDataSource"
+            
+            # Generate data source file path
+            $CollectionModuleFile = $_.name -replace(".ps1",".csv")
+            $CollectionDataSourcePath = "$OutputDirectory\$TargetDomain-$CollectionModuleFile"   
+
+            # Select analysis modules that match the current data source name
+            # This is based on the collection file name
+            $AnalysisModulesT = Get-ChildItem .\windows\modules\analysis | where fullname -like "*$CollectionDataSource*"
+            $AnalysisModulesCountT = $AnalysisModulesT | measure | select count -ExpandProperty count    
+            
+            if($AnalysisModulesCountT -eq 0){
+                Write-Output " [+][$Time] - No analysis modules exist for this data source." 
+            }else{
+                Write-Output " [+][$Time] - $AnalysisModulesCountT analysis modules found, loading data source."
+
+                # load the data source here
+            }
+
+            # Data Source Counter
+            $AnalysisModulesCountP = 0 
+
+            # Process each analysis module
+            $AnalysisModulesT  |
+            Foreach {
+
+                # Set analysis counter 
+                $AnalysisModulesCountP = $AnalysisModulesCountP + 1
+
+                # Parse analysis file path
+                $AnalysisModuleFilePath = $_.fullname      
+                
+                # Parse analysis module name
+                $AnalysisModuleName = $_.name -replace(".ps1","") 
+
+                # Load and run analysis module
+                $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
+                Write-Output " [+][$Time] - ($AnalysisModulesCountP of $AnalysisModulesCountT) $AnalysisModuleName"           
+                        
+                # do things here
+
+                # Save file
+                $AnalysisModuleFileName = $_.name -replace(".ps1",".csv")
+                $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+                # Write-Output " [+][$Time]   Saving to $OutputDirectory\$TargetDomain-$AnalysisModuleFileName"
+                $Results | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-$AnalysisModuleFileName"
+            }     
+
+        } 
 
         Write-Output " -------------------------------------------"
         Write-Output " REPORTING: RUN ALL MODULES"
