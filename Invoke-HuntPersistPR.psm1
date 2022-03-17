@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.20
+# Version: 0.21
 function Invoke-HuntPersistPR
 {    
    <#
@@ -85,7 +85,7 @@ function Invoke-HuntPersistPR
         # Get start time
         $StartTime = Get-Date
 	    $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-        Write-Output " [+][$Time] Starting active test"        
+        Write-Output " [+][$Time] Start active testing"        
         $StopWatch =  [system.diagnostics.stopwatch]::StartNew()
 
         Write-Output " -------------------------------------------"
@@ -192,6 +192,9 @@ function Invoke-HuntPersistPR
                 $FolderDateTime =  Get-Date -Format "MMddyyyyHHmm"
                 $OutputDirectory = "$OutputDirectory\$TargetDomain-$FolderDateTime"
                 mkdir $OutputDirectory | Out-Null
+                mkdir "$OutputDirectory\collection" | Out-Null
+                mkdir "$OutputDirectory\analysis" | Out-Null
+                mkdir "$OutputDirectory\discovery" | Out-Null
             }catch{
                 Write-Output " [x][$Time] The $OutputDirectory was not writable."
                 Write-Output " [!][$Time] Aborting operation."
@@ -225,8 +228,8 @@ function Invoke-HuntPersistPR
 
         # Save results
         # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers.csv"
-        $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers.csv"
-        # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
+        $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers.csv"
+        # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
         $DomainComputersFile = "$TargetDomain-Domain-Computers.csv"
         #$DomainComputersFileH = "$TargetDomain-Domain-Computers.html"
 
@@ -278,8 +281,8 @@ function Invoke-HuntPersistPR
         # Save results
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
         # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Pingable.csv"
-        $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-Pingable.csv"
-        #$null = Convert-DataTableToHtmlTable -DataTable $ComputersPingable -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers-Pingable.html" -Title "Domain Computers: Ping Response" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain that responded to ping requests."
+        $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Pingable.csv"
+        #$null = Convert-DataTableToHtmlTable -DataTable $ComputersPingable -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Pingable.html" -Title "Domain Computers: Ping Response" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain that responded to ping requests."
         $ComputersPingableFile = "$TargetDomain-Domain-Computers-Pingable.csv"
         #$ComputersPingableFileH =  "$TargetDomain-Domain-Computers-Pingable.html"
 
@@ -339,8 +342,8 @@ function Invoke-HuntPersistPR
 
         # Save results
         # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5985.csv"        
-        $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-Open5985.csv"
-        #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
+        $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5985.csv"
+        #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
         $Computers5985OpenFile = "$TargetDomain-Domain-Computers-Open5985.csv"
         #$Computers5985OpenFileH ="$TargetDomain-Domain-Computers-Open5985.html"
 
@@ -394,8 +397,8 @@ function Invoke-HuntPersistPR
 
         # Save results
         # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5986.csv"        
-        $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-Open5986.csv"
-        #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\$TargetDomain-Domain-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
+        $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5986.csv"
+        #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
         $Computers5986OpenFile = "$TargetDomain-Domain-Computers-Open5986.csv"
         #$Computers5986OpenFileH ="$TargetDomain-Domain-Computers-Open5986.html"
 
@@ -418,8 +421,8 @@ function Invoke-HuntPersistPR
             # Save results
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             Write-Output " [+][$Time] - $PsRemotingTargetsAllCount computers will be targeted."
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-PsRemoting.csv"        
-            $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-Domain-Computers-PsRemoting.csv"        
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\discovery\$TargetDomain-Domain-Computers-PsRemoting.csv"        
+            $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-PsRemoting.csv"        
         }
 
         Write-Output " -------------------------------------------"
@@ -489,8 +492,8 @@ function Invoke-HuntPersistPR
             # Save output
             $FileName = $_.name -replace(".ps1",".csv")
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-$FileName"
-            $Results | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-$FileName"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\collection\$TargetDomain-$FileName"
+            $Results | Export-Csv -NoTypeInformation "$OutputDirectory\collection\$TargetDomain-$FileName"
 
         }
 
@@ -522,7 +525,7 @@ function Invoke-HuntPersistPR
             
             # Generate data source file path
             $CollectionModuleFile = $_.name -replace(".ps1",".csv")
-            $CollectionDataSourcePath = "$OutputDirectory\$TargetDomain-$CollectionModuleFile"   
+            $CollectionDataSourcePath = "$OutputDirectory\collection\$TargetDomain-$CollectionModuleFile"   
 
             # Select analysis modules that match the current data source name
             # This is based on the collection file name
@@ -534,7 +537,8 @@ function Invoke-HuntPersistPR
             }else{
                 Write-Output " [+][$Time] - $AnalysisModulesCountT analysis modules found, loading data source."
 
-                # load the data source here
+                # load the data source data here
+                $CollectedData = Import-Csv $CollectionDataSourcePath
             }
 
             # Data Source Counter
@@ -551,19 +555,29 @@ function Invoke-HuntPersistPR
                 $AnalysisModuleFilePath = $_.fullname      
                 
                 # Parse analysis module name
-                $AnalysisModuleName = $_.name -replace(".ps1","") 
+                $AnalysisModuleName = $_.name -replace(".ps1","")                 
 
                 # Load and run analysis module
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
                 Write-Output " [+][$Time] - ($AnalysisModulesCountP of $AnalysisModulesCountT) $AnalysisModuleName"           
-                        
-                # do things here
+                
+                # Get module code
+                $AnalysisCommand = Get-Content $AnalysisModuleFilePath -Raw
 
-                # Save file
+                # Run module code
+                $AnalysisResult = Invoke-Expression $AnalysisCommand
+
+                # Save all instances
                 $AnalysisModuleFileName = $_.name -replace(".ps1",".csv")
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                # Write-Output " [+][$Time]   Saving to $OutputDirectory\$TargetDomain-$AnalysisModuleFileName"
-                $Results | Export-Csv -NoTypeInformation "$OutputDirectory\$TargetDomain-$AnalysisModuleFileName"
+                # Write-Output " [+][$Time]   Saving to $OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName"
+                $AnalysisResult | Export-Csv -NoTypeInformation "$OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName"
+
+                # Save grouped data
+                $AnalysisModuleFileName = $_.name -replace(".ps1","-Counts.csv")
+                $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+                # Write-Output " [+][$Time]   Saving to $OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName"
+                $AnalysisResult | select pathname,name | group pathname | Sort-Object count -Descending | select count,name | Export-Csv -NoTypeInformation "$OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName-counts"
             }     
 
         } 
@@ -571,12 +585,7 @@ function Invoke-HuntPersistPR
         Write-Output " -------------------------------------------"
         Write-Output " REPORTING: RUN ALL MODULES"
         Write-Output " -------------------------------------------"
-        Write-Output " TBD - TARGET PS REMOTING SYSTEMS"
-
-        # run report generation
-        # html summary
-        # jupyter notebooks
-        # resole import file
+        Write-Output " - HTML (pending)"
 
         Write-Output " -------------------------------------------"
         Write-Output " SHUTDOWN"
@@ -588,8 +597,8 @@ function Invoke-HuntPersistPR
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
         $StopTime = Get-Date
         $ScanDuration = $StopTime - $StartTime
-        Write-Output " [+][$Time]  - Scan complete."
-        Write-Output " [+][$Time]  - Scan Duration: $ScanDuration"
+        Write-Output " [+][$Time]  - Stopping active testing"
+        Write-Output " [+][$Time]  - Test duration: $ScanDuration"
      
      }
 }
