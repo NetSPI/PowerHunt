@@ -6,6 +6,11 @@ Invoke-HuntPersistPR is a PowerShell framework designed to use PowerShell Remoti
 * Administrative privileges on the collection targets and local system
 * PowerShell Remoting must be enabled and accessible on the target systems
 
+## Setup Instructions
+* Download the full project with subdirectories to the system that you will be running the data collection from.
+* Import the Invoke-HuntPersistPR.psm1 script.
+* Run the command with the desired parameters.
+
 ## Command Examples
 Run from domain joined system and use default domain controller:
 <pre>Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1</pre>
@@ -88,6 +93,10 @@ Below is a summary of the currently supported analysis modules.
 |analysis-named-pipes-known-bad|tbd|collect-named-pipes
 |analysis-events-4732-add-user|tbd|collect-events-4732
 
+## TODO
+* Finish adding analysis modules
+* Create an HTML summary report
+  
 ## Script Authors
 ### Primary
 Scott Sutherland (@_nullbind) <Br>
