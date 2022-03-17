@@ -31,6 +31,7 @@ Invoke-HuntPersistPR.psm1<br>
 \windows\modules\analysis<br>
                 
 ## Collection Modules
+Below is a summary of the currently supported collection modules.
 |Module|MITRE ID|Description|Collection Method
 |:--------------------------------|:-----------|:-----------|:-----------|
 |collect-tasks|T1053.002|Collects Windows scheduled task information.|Get-ScheduledTask
