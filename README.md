@@ -24,11 +24,13 @@ Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp -DomainController 10.
 * Please note that if analysis modules are not disabled, time to script completion may be longer.
 
 ## Framework Structure Summary
-Invoke-HuntPersistPR.psm1<br>
-\windows<br>
-\windows\modules<br>
-\windows\modules\collection<br>
-\windows\modules\analysis<br>
+Below is a summary framework's directory structure.
+|Path|Description
+|:-------------------------------------------------------|:-----------
+|Invoke-HuntPersistPR.psm1|This the primary script.
+|\windows\modules|This contains all Windows modules.
+|\windows\modules\collection|This contains all Windows collection modules. Collection modules can be added here and run against targets without additional code changes to the primary script.
+|\windows\modules\analysis|This contains all Windows analysis modules. Analysis modules can be added here and run against targets without additional code changes to the primary script.
                 
 ## Collection Modules
 Below is a summary of the currently supported collection modules.
