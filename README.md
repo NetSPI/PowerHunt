@@ -35,7 +35,7 @@ Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp -DomainController 10.
 </pre>
 
 ## Command Benchmarks
-* Based on initial testing collection can be conduct across approximetly 2000 system an hour.
+* Based on initial testing, data collection can be completed from approximetly 2000 systems an hour.
 * Please note that if analysis modules are not disabled, time to script completion may be longer.
 
 ## Framework Structure Summary
