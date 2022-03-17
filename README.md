@@ -26,6 +26,12 @@ The example below shows the syntax for running the script from a domain joined s
 Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1
 </pre> 
 
+#### Example 3
+The example below shows the syntax for running the script from a domain joined system using alternative credentials.
+<pre>
+Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Credentials domain\user
+</pre> 
+
 ### Non Domain Joined System
 #### Example 1
 The example below shows the syntax for running the script from a system that has NOT been joined to the target domain.
@@ -33,6 +39,13 @@ The example below shows the syntax for running the script from a system that has
 runas /netonly /user:domain\user powershell.exe
 Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp -DomainController 10.1.1.1 -Username domain\user -password 'password'
 </pre>
+
+#### Example 2
+The example below shows the syntax for running the script from a domain joined system using alternative credentials.
+<pre>
+runas /netonly /user:domain\user powershell.exe
+Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Credentials domain\user
+</pre> 
 
 ## Command Benchmarks
 * Based on initial testing, data collection can be completed from approximetly 2000 systems an hour.
