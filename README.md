@@ -1,5 +1,5 @@
 # Invoke-HuntPersistPR
-Invoke-HuntPersistPR is a PowerShell framework designed to use PowerShell Remoting to collect and analyze data at the beginning of threat hunting exercises that focus on common persistence and related techniques. This script is intended to be used by security teams that can operate from a privileged context within their Active Directory domain.
+Invoke-HuntPersistPR is a PowerShell framework designed to use PowerShell Remoting to collect and analyze data at the beginning of threat hunting exercises that focus on common persistence and related techniques. This script is intended to be used by security teams that can operate from a privileged context within their Active Directory domain.  This is not a novel idea, but I thought it was worth sharing for those who may be interested in playing with it.
 
 ## Requirements
 * Domain user credentials
@@ -19,10 +19,17 @@ runas /netonly /user:domain\user powershell.exe
 Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp -DomainController 10.1.1.1 -Username domain\user -password 'password'
 </pre>
 
-## Command Bench Marks
+## Command Benchmarks
 * Based on initial testing collection can be conduct across approximetly 2000 system an hour.
 * Please note that if analysis modules are not disabled, time to script completion may be longer.
 
+## Framework Structure Summary
+Invoke-HuntPersistPR.psm1<br>
+\windows<br>
+\windows\modules<br>
+\windows\modules\collection<br>
+\windows\modules\analysis<br>
+                
 ## Collection Modules
 * Windows services
 * Windows scheduled tasks
