@@ -53,10 +53,10 @@ Invoke-HuntPersistPR.psm1<br>
 
 ## Script Authors
 ### Primary
-Scott
+Scott Sutherland
 ### Secondardy
-These individuals wrote open source code that were used as part of this project.
-Eric<br>
+These individuals wrote open source code that were used as part of this project.<br>
+Eric Gruber<br>
 BoeProx<br>
 Will Schroeder<br>
 Rampling CookieMonster<br>
