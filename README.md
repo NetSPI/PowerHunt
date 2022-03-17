@@ -55,7 +55,7 @@ Invoke-HuntPersistPR.psm1<br>
 ### Primary
 Scott Sutherland
 ### Secondardy
-These individuals wrote open source code that were used as part of this project.<br>
+These individuals wrote open source code that was used as part of this project.<br>
 Eric Gruber<br>
 BoeProx<br>
 Will Schroeder<br>
