@@ -47,7 +47,7 @@ runas /netonly /user:domain\user powershell.exe
 Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Credentials domain\user
 </pre> 
 
-## Framework Structure Summary
+## Invoke-HuntPersistPR Framework Structure
 Below is a summary framework's directory structure.
 |Path|Description
 |:-------------------------------------------------------|:-----------
