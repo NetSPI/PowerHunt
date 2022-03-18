@@ -133,6 +133,8 @@ Below is a summary of the currently supported analysis modules.
 * list folder - lolbin, management strings
 * Finalize credentials passthrough to ldap and remoting sessions
 * Finish adding analysis modules
+* add service account collection
+* add analysis-service-account-user
 * add process data source
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 * add task author and userid mismatch test
