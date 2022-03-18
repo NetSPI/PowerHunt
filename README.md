@@ -62,6 +62,7 @@ Below is a summary framework's directory structure.
 |Invoke-HuntPersistPR.psm1|This the primary script.
 |\windows\modules\collection|This contains all Windows collection modules. Collection modules can be added here and run against targets without additional code changes to the primary script.
 |\windows\modules\analysis|This contains all Windows analysis modules. Analysis modules can be added here and run against targets without additional code changes to the primary script.
+|\windows\modules\lists|This contains lists of items used by analysis modules.
                 
 ## Collection Modules
 Collection modules are used query data from target systems.  They typically target a single data source. Below is a summary of the currently supported collection modules. 
