@@ -78,6 +78,7 @@ Collection modules are used query data from target systems.  They typically targ
 |collect-named-pipes|T1570|Collect information from named pipes|Get-ChildItem \\.\pipe\
 |collect-events-4732|T1136.001|Event 4732|Collect information from 4732 events (member added to security-enabled local group)|Get-WinEvent -FilterHashtable @{logname="security"; id="4732"}
 |collect-events-1102|T1070.001|Event 1102|Collect information from 1102 events (audit log cleared)|Get-WinEvent -FilterHashtable @{logname="security"; id="1102"}
+|collect-process|T1057|Collects list of running processes.|Get-WMIObject Win32_Process
   
 #### Adding New Collection Modules
 All collection modules are automatically loaded from the windows\modules\collection folder and ran against established PowerShell Remoting systems. You can add your own there and they will be run automatically.
@@ -131,16 +132,19 @@ Below is a summary of the currently supported analysis modules.
 * Please note that if analysis modules are not disabled, time to script completion may be longer.
 
 ## TODO
-* add process data source
 * fix counts ... some are pathname and some are filepath; there may be others - consider makes count analysis modules instead
 * Finalize credentials passthrough to ldap and remoting sessions
-* cover more all users directories
-* cover user reg run keys (not just lm)
-* add analysis-service-account-user
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
-* add task author and userid mismatch test
-* add task owner outliers
-* add task creation outliers
+  * update collect-process to include owner pesecurity information
+* add analysis-process-outlier-file-owner
+* add analysis-process-lobas
+* add analysis-task-author-run-user-mismatch
+* add analysis-task-outliers-owner
+* add analysis-task-outliers-user
+* add analysis-task-outliers-creation
+* add analysis-service-account-user
+* update collect-startup-files-allusers to cover more directories
+* update collect-startup-registry-run to cover HKU, not just HKLM
   
 ## Script Authors
 ### Primary
