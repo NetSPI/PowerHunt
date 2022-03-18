@@ -131,12 +131,12 @@ Below is a summary of the currently supported analysis modules.
 * Please note that if analysis modules are not disabled, time to script completion may be longer.
 
 ## TODO
-* Finalize credentials passthrough to ldap and remoting sessions
+* add process data source
 * fix counts ... some are pathname and some are filepath; there may be others - consider makes count analysis modules instead
+* Finalize credentials passthrough to ldap and remoting sessions
 * cover more all users directories
 * cover user reg run keys (not just lm)
 * add analysis-service-account-user
-* add process data source
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 * add task author and userid mismatch test
 * add task owner outliers
