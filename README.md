@@ -132,6 +132,8 @@ Below is a summary of the currently supported analysis modules.
 ## TODO
 * Finalize credentials passthrough to ldap and remoting sessions
 * Finish adding analysis modules
+* cover more all users directories
+* cover user reg run keys (not just lm)
 * add analysis-service-account-user
 * add custom count analysis modules for each data source.
 * add process data source
