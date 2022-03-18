@@ -131,7 +131,6 @@ Below is a summary of the currently supported analysis modules.
 
 ## TODO
 * Finalize credentials passthrough to ldap and remoting sessions
-* Finish adding analysis modules
 * fix counts ... some are pathname and some are filepath; there may be others - consider makes count analysis modules instead
 * cover more all users directories
 * cover user reg run keys (not just lm)
