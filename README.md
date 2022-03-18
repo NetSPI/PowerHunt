@@ -150,6 +150,7 @@ Below is a summary of the currently supported analysis modules.
 * update collect-startup-files-allusers to cover more directories
 * update collect-startup-registry-run to cover HKU, not just HKLM
 * add execution flow diagram
+* update baked in help
   
 ## Script Authors
 ### Primary
