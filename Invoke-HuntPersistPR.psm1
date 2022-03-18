@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.22
+# Version: 0.23
 function Invoke-HuntPersistPR
 {    
    <#
@@ -89,7 +89,7 @@ function Invoke-HuntPersistPR
         $StopWatch =  [system.diagnostics.stopwatch]::StartNew()
 
         Write-Output " -------------------------------------------"
-        Write-Output " ENABLING POWERSHELL REMOTING"
+        Write-Output " SETUP: ENABLE POWERSHELL REMOTING"
         Write-Output " -------------------------------------------"
 
         # Check for local administrator privileges
