@@ -4,7 +4,6 @@ Invoke-HuntPersistPR is a PowerShell framework designed to use PowerShell Remoti
 User and developer guides can be found on the wiki  <a href="https://github.com/NetSPI/Invoke-HuntPersistPR/wiki">here</a>.
 
 ## TODO
-* fix counts ... some are pathname and some are filepath; there may be others - consider makes count analysis modules instead
 * Finalize credentials passthrough to ldap and remoting sessions
 * Add single target
 * Add group of targets
