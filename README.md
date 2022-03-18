@@ -63,7 +63,7 @@ Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp\now
  ===========================================
  [+][03/18/2022 17:35] Start active testing
  -------------------------------------------
- ENABLING POWERSHELL REMOTING
+ SETUP: ENABLE POWERSHELL REMOTING
  -------------------------------------------
  [+][03/18/2022 17:35] Confirmed local administrative privileges.
  [+][03/18/2022 17:35] Checking if PS Remoting is enabled...
