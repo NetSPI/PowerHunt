@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.21
+# Version: 0.22
 function Invoke-HuntPersistPR
 {    
    <#
@@ -233,7 +233,7 @@ function Invoke-HuntPersistPR
         $DomainComputersFile = "$TargetDomain-Domain-Computers.csv"
         #$DomainComputersFileH = "$TargetDomain-Domain-Computers.html"
 
-        Write-Output " [+][$Time] All results will be written to the directory $OutputDirectory"
+        Write-Output " [+][$Time] Output directory: $OutputDirectory"
 
         # ----------------------------------------------------------------------
         # Identify computers that respond to ping reqeusts
@@ -565,19 +565,7 @@ function Invoke-HuntPersistPR
                 $AnalysisCommand = Get-Content $AnalysisModuleFilePath -Raw
 
                 # Run module code
-                $AnalysisResult = Invoke-Expression $AnalysisCommand
-
-                # Save all instances
-                $AnalysisModuleFileName = $_.name -replace(".ps1",".csv")
-                $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                # Write-Output " [+][$Time]   Saving to $OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName"
-                $AnalysisResult | Export-Csv -NoTypeInformation "$OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName"
-
-                # Save grouped data
-                $AnalysisModuleFileName = $_.name -replace(".ps1","-Counts.csv")
-                $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                # Write-Output " [+][$Time]   Saving to $OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName"
-                $AnalysisResult | select pathname,name | group pathname | Sort-Object count -Descending | select count,name | Export-Csv -NoTypeInformation "$OutputDirectory\analysis\$TargetDomain-$AnalysisModuleFileName-counts"
+                Invoke-Expression $AnalysisCommand                
             }     
 
         } 
