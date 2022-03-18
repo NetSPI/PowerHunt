@@ -130,10 +130,8 @@ Below is a summary of the currently supported analysis modules.
 * Please note that if analysis modules are not disabled, time to script completion may be longer.
 
 ## TODO
-* list folder - lolbin, management strings
 * Finalize credentials passthrough to ldap and remoting sessions
 * Finish adding analysis modules
-* add service account collection
 * add analysis-service-account-user
 * add process data source
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
