@@ -133,6 +133,7 @@ Below is a summary of the currently supported analysis modules.
 * Finalize credentials passthrough to ldap and remoting sessions
 * Finish adding analysis modules
 * add analysis-service-account-user
+* add custom count analysis modules for each data source.
 * add process data source
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 * add task author and userid mismatch test
