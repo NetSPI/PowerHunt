@@ -51,9 +51,9 @@ Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 1
 Below is a summary of the output generated from Invoke-HuntPersistPR. Each run of the script will generate its own folder that includes the domain and the associated date/timestamp.  Files generated from Invoke-HuntPersistPR can be found in the following directories:
 |Directory|Description
 |:-------------------------------------------------------|:-----------
-|/discovery|Files contianing active domain computers with PS remoting enabled sampled during testing.
-|/collection|Files containing collected data from targeted data sources that can be analyzed offline.
-|/analysis|Invoke-HuntPersistPR will filter the collected data using the analysis modules and generate .csv files that can be analyzed offline.
+|\discovery|Files contianing active domain computers with PS remoting enabled sampled during testing.
+|\collection|Files containing collected data from targeted data sources that can be analyzed offline.
+|\analysis|Invoke-HuntPersistPR will filter the collected data using the analysis modules and generate .csv files that can be analyzed offline.
 
 ## Invoke-HuntPersistPR Framework Structure
 Below is a summary framework's directory structure.
