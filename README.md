@@ -6,7 +6,7 @@
 * <strong>Analyze</strong> collected data using easy to build analysis modules based on behavior.
 * <strong>Report</strong> summary data and initial insights that can help analysts get started on simple threat hunting exercises that focus on common persistence and related techniques.
 
-This is not a novel approach to hunting, but I thought the project was worth sharing for those who want to play with it. User and developer guides can be found on the wiki  <a href="https://github.com/NetSPI/Invoke-HuntPersistPR/wiki">here</a>.<Br>
+This is not a novel approach to threat hunting, but I thought the project was worth sharing for those who want to play with it. User and developer guides can be found on the wiki  <a href="https://github.com/NetSPI/Invoke-HuntPersistPR/wiki">here</a>.<Br>
 
 <strong>Author</strong><Br>
 Scott Sutherland (@_nullbind) <Br>
