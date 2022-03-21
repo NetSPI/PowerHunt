@@ -22,7 +22,8 @@ BSD 3-Clause
 * Add -OnlyCollection flag
 * Add -OnlyAnalysis -SourcePath flags
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
-  * update collect-process to include owner pesecurity information
+* update collect-process to include owner pesecurity information
+* Add count for all data source in analysis modules - process too
 * add analysis-process-outlier-file-owner
 * add analysis-process-lobas
 * add analysis-task-author-run-user-mismatch
