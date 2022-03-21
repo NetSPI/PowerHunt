@@ -1368,13 +1368,32 @@ $hash.tostring().replace('-','').trim()
 # ///////////////////////////////////////
 #  Get startup file information
 # ///////////////////////////////////////
-Get-childItem "$env:ALLUSERSPROFILE\Microsoft\Windows\Start Menu\Programs\StartUp\" | 
+
+# Get user directories
+$UserFolders = Get-ChildItem C:\Users\ -ErrorAction SilentlyContinue 
+
+# Get startup files from user directories
+$StartUpFilesUsers = $UserFolders | 
+foreach {
+    $CurrentFolder = $_.FullName
+    Get-ChildItem "$CurrentFolder\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup" -ErrorAction SilentlyContinue | select name,fullname
+}
+
+# Get startup files from all users directory
+$StartUpFilesAll = Get-childItem "$env:ALLUSERSPROFILE\Microsoft\Windows\Start Menu\Programs\StartUp\" | select name,fullname
+
+# Get all startup files
+$StartUpFiles = @() 
+$StartUpFiles += $StartUpFilesUsers
+$StartUpFiles += $StartUpFilesAll
+
+$StartUpFiles | 
 foreach {
 
     # Grab info from PE
-    $TargetFile = $_.FullName
-    if($_.FullName -like "*exe"){
-        $FilePath = $_.FullName
+    $FilePath = $_.FullName
+    if($_.FullName -like "*.exe"){
+        
         $PEConfig = Get-PESecurity -File "$FilePath"
         $ARCH = $PEConfig.ARCH
         $ASLR = $PEConfig.ASLR
@@ -1384,8 +1403,10 @@ foreach {
         $DotNET = $PEConfig.DotNET
         $HighentropyVA = $PEConfig.HighentropyVA
         $SafeSEH = $PEConfig.SafeSEH 
-        $StrongNaming = $PEConfig.StrongNaming               
+        $StrongNaming = $PEConfig.StrongNaming    
+                          
     }else{
+
         $ARCH = "N/A"
         $ASLR = "N/A"
         $Authenticode = "N/A"
@@ -1394,12 +1415,18 @@ foreach {
         $DotNET = "N/A"
         $HighentropyVA = "N/A"
         $SafeSEH = "N/A"
-        $StrongNaming = "N/A"    
-        $FileHash = ""    
+        $StrongNaming = "N/A"       
     }
 
     # Hash file
-    $FileHash = Get-FileMd5 "$TargetFile"
+    $FileHash = Get-FileMd5 "$FilePath"
+
+    # Grab owner info
+    $FileInfo = Get-Item $FilePath -ErrorAction SilentlyContinue
+    $FileOwner            = $FileInfo.GetAccessControl().Owner
+    $FileCreationTime     = $FileInfo.CreationTime
+    $FileLastWriteTime    = $FileInfo.LastWriteTime
+    $FileLastAccessTime   = $FileInfo.LastAccessTime 
 
     # Check for lnk file
     if($_.FullName -like "*.lnk"){
@@ -1409,23 +1436,33 @@ foreach {
         $FileLnkArgs = $LnkParse.CreateShortcut("$LinkPath").Arguments
         $FileLnkDesc = $LnkParse.CreateShortcut("$LinkPath").Description
     }else{
-        $FileLnkPath = ""
+        $FileLnkPath = "N/A"
+        $FileLnkArgs = "N/A"
+        $FileLnkDesc = "N/A"
+    }
+
+    # Check for lnk file
+    if($_.FullName -like "*.bat"){
+         $FileBatSrc = GC "$FilePath"-Raw
+    }else{
+        $FileBatSrc = "N/A"
     }
     
     # Create new object to return
     $Object = New-Object PSObject
-    $Object | add-member DataSource1 "autorun files"
-    $Object | add-member DataSource2 "All Users StartUp Profiles"
+    $Object | add-member DataSource1     "Autorun Files"
+    $Object | add-member DataSource2     "Startup Folders"
     $Object | add-member FileName         $_.Name
     $Object | add-member FileMd5Hash      $FileHash
     $Object | add-member FilePath         $_.FullName
     $Object | add-member FileLnkPath      $FileLnkPath
     $Object | add-member FileLnkArgs      $FileLnkArgs
     $Object | add-member FileLnkDesc      $FileLnkDesc
-    $Object | add-member FileOwner        $_.GetAccessControl().Owner
-    $Object | add-member CreationTime     $_.CreationTime
-    $Object | add-member LastWriteTime    $_.LastWriteTime
-    $Object | add-member LastAccessTime   $_.LastAccessTime
+    $Object | add-member FileBatSrc       $FileBatSrc
+    $Object | add-member FileOwner        $FileOwner 
+    $Object | add-member CreationTime     $FileCreationTime
+    $Object | add-member LastWriteTime    $FileLastWriteTime 
+    $Object | add-member LastAccessTime   $FileLastAccessTime
     $Object | add-member ARCH             $ARCH
     $Object | add-member ASLR             $ASLR 
     $Object | add-member Authenticode     $Authenticode
