@@ -1378,7 +1378,7 @@ foreach {
     $ConnProcess = $_.OwningProcess
 
     # Check process
-	Get-WMIObject Win32_Process | Select ProcessId,description, commandline,creationdate | where processid -like "$ConnProcess" |
+	Get-WMIObject Win32_Process | Select name,ProcessId,description, commandline,creationdate | where processid -like "$ConnProcess" |
     foreach{
 
         # Check process binary 
@@ -1388,10 +1388,12 @@ foreach {
             $TargetPath = "`"" + $ExePath[1] + "`""
         }else{
             $ExePath = $_.commandline -split(".exe")
-            $TargetPath = "`"" + $ExePath[0] + ".exe`""
+            $TargetPath = "`"" + $ExePath[0] + ".exe`""            
         }
 
         $TargetPath = $TargetPath -Replace('"','')
+
+      
         
         # Grab file data
         if(Test-Path $TargetPath){
@@ -1408,11 +1410,36 @@ foreach {
             $SafeSEH = $PEConfig.SafeSEH 
             $StrongNaming = $PEConfig.StrongNaming             
 
-            # Grab owner info
+           # Grab owner info
             $FileInfo = Get-Item $TargetPath -ErrorAction SilentlyContinue
+            $FileOwner            = $FileInfo.GetAccessControl().Owner
+            $FileCreationTime     = $FileInfo.CreationTime
+            $FileLastWriteTime    = $FileInfo.LastWriteTime
+            $FileLastAccessTime   = $FileInfo.LastAccessTime
 
             # Check file hash
             $FileHash = Get-FileMd5 "$TargetPath"
+        }else{
+            $FileHash = ""
+            $FileInfo = ""
+            $PEConfig = ""
+            $ARCH = ""
+            $ASLR = ""
+            $Authenticode = ""
+            $ControlFlowGuard = ""
+            $DEP = ""
+            $DotNET = ""
+            $HighentropyVA = ""
+            $SafeSEH = ""
+            $StrongNaming = ""
+            $FileOwner            = ""
+            $FileCreationTime     = ""
+            $FileLastWriteTime    = ""
+            $FileLastAccessTime   = ""
+        }
+        
+        if($TargetPath -notlike "*`:*"){
+            $TargetPath =  $_.name
         }        
     
         # Create new object to return
@@ -1427,10 +1454,10 @@ foreach {
         $Object | add-member OwningProcess        $ConnProcess
         $Object | add-member FilePath             $TargetPath
         $Object | add-member FileMd5Hash          $FileHash
-        $Object | add-member FileOwner            $FileInfo.GetAccessControl().Owner
-        $Object | add-member FileCreationTime     $FileInfo.CreationTime
-        $Object | add-member FileLastWriteTime    $FileInfo.LastWriteTime
-        $Object | add-member FileLastAccessTime   $FileInfo.LastAccessTime
+        $Object | add-member FileOwner            $FileOwner
+        $Object | add-member FileCreationTime     $FileCreationTime
+        $Object | add-member FileLastWriteTime    $FileLastWriteTime
+        $Object | add-member FileLastAccessTime   $FileLastAccessTime
         $Object | add-member ARCH                 $ARCH
         $Object | add-member ASLR                 $ASLR 
         $Object | add-member Authenticode         $Authenticode
