@@ -22,11 +22,13 @@ Primary Todo
 * Finalize credentials passthrough to ldap and remoting sessions
 * Add -OnlyCollection flag
 * Add -OnlyAnalysis -SourcePath flags
+* update baked in help
+* make formal ps module 
+* show help text here  
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
   
  Secondary Todo
  --
-* Add count for all data source in analysis modules - process too
 * add analysis-process-outlier-file-owner
 * add analysis-process-lobas
 * add analysis-task-author-run-user-mismatch
@@ -36,10 +38,7 @@ Primary Todo
 * add analysis-service-account-user
 * update collect-startup-files-allusers to cover more directories
 * update collect-startup-registry-run to cover HKU, not just HKLM
-* add execution flow diagram
-* update baked in help
-* make formal ps module 
-* show help text here
+
 
 
 
