@@ -25,6 +25,7 @@ Primary Todo
 * update baked in help
 * make formal ps module 
 * show help text here  
+* add log file
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 
 
