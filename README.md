@@ -26,10 +26,7 @@ Primary Todo
 * make formal ps module 
 * show help text here  
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
-  
- Secondary Todo
- --
-* update collect-startup-registry-run to cover HKU, not just HKLM
+
 
 
 
