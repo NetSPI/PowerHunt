@@ -14,14 +14,18 @@ Scott Sutherland (@_nullbind) <Br>
 <strong>License</strong><Br>
 BSD 3-Clause
 
-## TODO
-* Finalize credentials passthrough to ldap and remoting sessions
+Primary Todo
+--
+* Finish count analysis for all data sources
 * Add single target
 * Add group of targets
+* Finalize credentials passthrough to ldap and remoting sessions
 * Add -OnlyCollection flag
 * Add -OnlyAnalysis -SourcePath flags
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
-* update collect-process to include owner pesecurity information
+  
+ Secondary Todo
+ --
 * Add count for all data source in analysis modules - process too
 * add analysis-process-outlier-file-owner
 * add analysis-process-lobas
