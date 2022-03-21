@@ -29,7 +29,6 @@ Primary Todo
   
  Secondary Todo
  --
-* update collect-startup-files-allusers to cover more directories variations and user sub directories
 * update collect-startup-registry-run to cover HKU, not just HKLM
 
 
