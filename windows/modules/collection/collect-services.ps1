@@ -1,6 +1,6 @@
 # Script : Invoke-HuntPersistPR
 # Module : collect-services
-# Version: 1.0
+# Version: 1.1
 # Author : Scott Sutherland
 # Author : Eric Gruber (Get-PESecurity)
 #          https://github.com/NetSPI/PESecurity/blob/master/Get-PESecurity.psm1
@@ -1344,6 +1344,23 @@ function Add-Win32Type
   }
 }
 
+# /////////////////////////////////////////////////////
+# Get-FileMd5
+# /////////////////////////////////////////////////////
+function Get-FileMd5{
+    
+    param (
+        [string]$FilePath
+    )
+
+$md5 = New-Object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
+$stream = [System.IO.File]::Open("$FilePath",[System.IO.Filemode]::Open, [System.IO.FileAccess]::Read) 
+$hash = [System.BitConverter]::ToString($md5.ComputeHash($stream))
+$stream.Close()
+$hash.tostring().replace('-','').trim()
+}
+
+
 # ///////////////////////////////////////
 #  Get windows service information
 # ///////////////////////////////////////
@@ -1374,15 +1391,16 @@ foreach {
     $DotNET = $PEConfig.DotNET
     $HighentropyVA = $PEConfig.HighentropyVA
     $SafeSEH = $PEConfig.SafeSEH 
-    $StrongNaming = $PEConfig.StrongNaming             
+    $StrongNaming = $PEConfig.StrongNaming 
+    $FileHash = Get-FileMd5 "$TargetPath"            
 
     # Grab file meta data info
     $FileInfo = Get-Item $TargetPath
     
     # Create new object to return
     $Object = New-Object PSObject
-	$Object | add-member DataSource1 		  "service"
-	$Object | add-member DataSource2 		  "Get-WmiObject -Class win32_service"	
+    $Object | add-member DataSource1 	      "service"
+    $Object | add-member DataSource2 	      "Get-WmiObject -Class win32_service"	
     $Object | add-member ServiceName          $_.Name
     $Object | add-member Description          $_.Description    
     $Object | add-member ServiceType          $_.ServiceType
@@ -1392,6 +1410,7 @@ foreach {
     $Object | add-member ServiceAccount       $_.startname
     $Object | add-member PathName             $_.PathName                                    
     $Object | add-member FilePath             $TargetPath
+    $Object | add-member FileMd5Hash          $FileHash
     $Object | add-member FileOwner            $FileInfo.GetAccessControl().Owner
     $Object | add-member FileCreationTime     $FileInfo.CreationTime
     $Object | add-member FileLastWriteTime    $FileInfo.LastWriteTime
