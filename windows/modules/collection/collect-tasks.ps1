@@ -1,11 +1,11 @@
 # Script : Invoke-HuntPersistPR
 # Module : collect-tasks
-# Version: 1.0
+# Version: 1.1
 # Author : Scott Sutherland
 # Author : Eric Gruber (Get-PESecurity)
 #          https://github.com/NetSPI/PESecurity/blob/master/Get-PESecurity.psm1
 # Summary: This is script is part of the Invoke-HuntPersistPR framework 
-#          and is used to collect windows scheduled task information.
+#          and is used to collect Windows scheduled task information.
 # License: 3-clause BSD
 
 # ///////////////////////////////////////
@@ -1344,6 +1344,24 @@ function Add-Win32Type
   }
 }
 
+
+# /////////////////////////////////////////////////////
+# Get-FileMd5
+# /////////////////////////////////////////////////////
+function Get-FileMd5{
+    
+    param (
+        [string]$FilePath
+    )
+
+$md5 = New-Object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
+$stream = [System.IO.File]::Open("$FilePath",[System.IO.Filemode]::Open, [System.IO.FileAccess]::Read) 
+$hash = [System.BitConverter]::ToString($md5.ComputeHash($stream))
+$stream.Close()
+$hash.tostring().replace('-','').trim()
+}
+
+
 # ///////////////////////////////////////
 #  Get task information
 # ///////////////////////////////////////
@@ -1403,12 +1421,14 @@ ForEach-Object {
             $FileOwner = $FileInfo.GetAccessControl().Owner
             $FileCreate = $FileInfo.CreationTime
             $FileLastWrite = $FileInfo.LastWriteTime
-            $FileLastACcess = $FileInfo.LastAccessTime
+            $FileLastACcess = $FileInfo.LastAccessTime                       
+            $FileHash = Get-FileMd5 "$TargetPath"
         }else{
             $FileOwner = ""
             $FileCreate = ""
             $FileLastWrite = ""
-            $FileLastACcess = ""            
+            $FileLastACcess = "" 
+            $FileHash =  ""           
         }
     }
 
@@ -1470,6 +1490,7 @@ ForEach-Object {
     # Command and file info
 	$Object | add-member Command	          $_.Actions.execute
     $Object | add-member FilePath             $TargetPath
+    $Object | add-member FileMd5Hash          $FileHash
 	$Object | add-member FileOwner	          $FileOwner
 	$Object | add-member FileCreationTime     $FileCreate
 	$Object | add-member FileLastWriteTime    $FileLastWrite
@@ -1486,5 +1507,4 @@ ForEach-Object {
 
     # Return object
 	$Object
-}       
- 
+} 
