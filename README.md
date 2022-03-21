@@ -36,7 +36,7 @@ Primary Todo
 * add analysis-task-outliers-user
 * add analysis-task-outliers-creation
 * add analysis-service-account-user
-* update collect-startup-files-allusers to cover more directories
+* update collect-startup-files-allusers to cover more directories variations and user sub directories
 * update collect-startup-registry-run to cover HKU, not just HKLM
 
 
