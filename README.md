@@ -33,6 +33,7 @@ BSD 3-Clause
 * update collect-startup-registry-run to cover HKU, not just HKLM
 * add execution flow diagram
 * update baked in help
+ * make formal ps module 
 
 
 
