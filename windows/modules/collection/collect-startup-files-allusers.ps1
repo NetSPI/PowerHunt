@@ -1348,22 +1348,6 @@ function Add-Win32Type
 }
 
 
-# /////////////////////////////////////////////////////
-# Get-FileMd5
-# /////////////////////////////////////////////////////
-function Get-FileMd5{
-    
-    param (
-        [string]$FilePath
-    )
-
-$md5 = New-Object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
-$stream = [System.IO.File]::Open("$FilePath",[System.IO.Filemode]::Open, [System.IO.FileAccess]::Read) 
-$hash = [System.BitConverter]::ToString($md5.ComputeHash($stream))
-$stream.Close()
-$hash.tostring().replace('-','').trim()
-}
-
 
 # ///////////////////////////////////////
 #  Get startup file information
@@ -1383,8 +1367,7 @@ foreach {
         $DotNET = $PEConfig.DotNET
         $HighentropyVA = $PEConfig.HighentropyVA
         $SafeSEH = $PEConfig.SafeSEH 
-        $StrongNaming = $PEConfig.StrongNaming 
-        $FileHash = Get-FileMd5 "$TargetPath"        
+        $StrongNaming = $PEConfig.StrongNaming         
     }else{
         $ARCH = "N/A"
         $ASLR = "N/A"
@@ -1394,18 +1377,29 @@ foreach {
         $DotNET = "N/A"
         $HighentropyVA = "N/A"
         $SafeSEH = "N/A"
-        $StrongNaming = "N/A" 
-        $FileHash = ""    
-        $FileHash = ""
+        $StrongNaming = "N/A"        
+    }
+
+    # Check for lnk file
+    if($_.FullName -like "*.lnk"){
+        $LinkPath = $_.FullName
+        $LnkParse = New-Object -ComObject WScript.Shell
+        $FileLnkPath = $LnkParse.CreateShortcut("$LinkPath").TargetPath 
+        $FileLnkArgs = $LnkParse.CreateShortcut("$LinkPath").Arguments
+        $FileLnkDesc = $LnkParse.CreateShortcut("$LinkPath").Description
+    }else{
+        $FileLnkPath = ""
     }
     
     # Create new object to return
     $Object = New-Object PSObject
-    $Object | add-member DataSource1     "autorun files"
-    $Object | add-member DataSource2     "All Users StartUp Profiles"
+    $Object | add-member DataSource1 "autorun files"
+    $Object | add-member DataSource2 "All Users StartUp Profiles"
     $Object | add-member FileName         $_.Name
     $Object | add-member FilePath         $_.FullName
-    $Object | add-member FileMd5Hash      $FileHash
+    $Object | add-member FileLnkPath      $FileLnkPath
+    $Object | add-member FileLnkArgs      $FileLnkArgs
+    $Object | add-member FileLnkDesc      $FileLnkDesc
     $Object | add-member FileOwner        $_.GetAccessControl().Owner
     $Object | add-member CreationTime     $_.CreationTime
     $Object | add-member LastWriteTime    $_.LastWriteTime
