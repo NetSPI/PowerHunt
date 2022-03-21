@@ -1425,8 +1425,8 @@ $hash.tostring().replace('-','').trim()
     
         # Create new object to return
         $Object = New-Object PSObject
-	    $Object | add-member DataSource1 		  "Processes"
-	    $Object | add-member DataSource2 		  "Get-WMIObject Win32_Process"	        
+	$Object | add-member DataSource1 	  "Processes"
+	$Object | add-member DataSource2 	  "Get-WMIObject Win32_Process"	        
         $Object | add-member ProcessName          $_.name
         $Object | add-member ProcessId            $_.ProcessId
         $Object | add-member FilePath             $TargetPath
