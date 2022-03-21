@@ -16,6 +16,7 @@ BSD 3-Clause
 
 ## TODO
 * Finalize credentials passthrough to ldap and remoting sessions
+* add file md5 from function from smb scanner
 * Add single target
 * Add group of targets
 * Add -OnlyCollection flag
