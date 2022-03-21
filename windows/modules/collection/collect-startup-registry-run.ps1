@@ -1,6 +1,6 @@
 # Script : Invoke-HuntPersistPR
 # Module : collect-startup-registry-run
-# Version: 1.1
+# Version: 1.2
 # Author : Scott Sutherland
 # Author : Eric Gruber (Get-PESecurity)
 #          https://github.com/NetSPI/PESecurity/blob/master/Get-PESecurity.psm1
@@ -1369,6 +1369,9 @@ function Invoke-HuntRegistryAutorun {
     $TargetKeys = New-Object System.Data.DataTable 
     $TargetKeys.Columns.Add('RegPath') | Out-Null
     $TargetKeys.Rows.Add('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\') | Out-Null
+    $TargetKeys.Rows.Add('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce\') | Out-Null
+    $TargetKeys.Rows.Add('HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\') | Out-Null
+    $TargetKeys.Rows.Add('HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce\') | Out-Null
 
     # Data table for results
     $TableResults = New-Object System.Data.DataTable 
@@ -1403,13 +1406,12 @@ function Invoke-HuntRegistryAutorun {
         $RegPath = $_.RegPath
         
         # Get auto run application paths
-        $RegPropertiesDynamic = Get-ItemProperty $RegPath -ErrorAction SilentlyContinue | gm | Where-Object MemberType -like 'NoteProperty' |
+        $RegPropertiesDynamic = Get-ItemProperty $RegPath -ErrorAction SilentlyContinue | gm -ErrorAction SilentlyContinue | Where-Object MemberType -like 'NoteProperty' |
         Where-Object name -notlike 'PSPath' |
         Where-Object name -notlike 'PSProvider' |
         Where-Object name -notlike 'PSParentPath' | 
         Where-Object name -notlike 'PSChildName' |
-        Where-Object name -notlike 'PSDrive' |
-        Where-Object name -notlike 'PSPath'               
+        Where-Object name -notlike 'PSDrive'              
 
         $RegPropertiesStatic = Get-ItemProperty $RegPath -ErrorAction SilentlyContinue
         $RegPsPath = $RegPropertiesStatic.PsPath
@@ -1421,7 +1423,7 @@ function Invoke-HuntRegistryAutorun {
         ForEach-Object {
             
             [string]$RegName = $_.Name
-            $ResultValue = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\' -Name $RegName | select "$RegName" -ExpandProperty "$RegName"
+            $ResultValue = Get-ItemProperty $RegPath -Name $RegName | select "$RegName" -ExpandProperty "$RegName"
 
             # Parse exe path
             if ($ResultValue -like "*`"*"){
