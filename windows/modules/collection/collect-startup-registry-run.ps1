@@ -1,6 +1,6 @@
 # Script : Invoke-HuntPersistPR
 # Module : collect-startup-registry-run
-# Version: 1.0
+# Version: 1.1
 # Author : Scott Sutherland
 # Author : Eric Gruber (Get-PESecurity)
 #          https://github.com/NetSPI/PESecurity/blob/master/Get-PESecurity.psm1
@@ -1364,6 +1364,7 @@ function Invoke-HuntRegistryAutorun {
     $TableResults.Columns.Add('Property') | Out-Null
     $TableResults.Columns.Add('Value') | Out-Null
     $TableResults.Columns.Add('FilePath') | Out-Null
+    $TableResults.Columns.Add('FileMd5Hash') | Out-Null
     $TableResults.Columns.Add('FileOwner') | Out-Null
     $TableResults.Columns.Add('FileCreateTime') | Out-Null
     $TableResults.Columns.Add('FileLastWriteTime') | Out-Null
@@ -1428,7 +1429,8 @@ function Invoke-HuntRegistryAutorun {
                 $DotNET = $PEConfig.DotNET
                 $HighentropyVA = $PEConfig.HighentropyVA
                 $SafeSEH = $PEConfig.SafeSEH 
-                $StrongNaming = $PEConfig.StrongNaming         
+                $StrongNaming = $PEConfig.StrongNaming 
+                $FileHash = Get-FileMd5 "$TargetPath"        
             }else{
                 $ARCH = "N/A"
                 $ASLR = "N/A"
@@ -1438,7 +1440,8 @@ function Invoke-HuntRegistryAutorun {
                 $DotNET = "N/A"
                 $HighentropyVA = "N/A"
                 $SafeSEH = "N/A"
-                $StrongNaming = "N/A"        
+                $StrongNaming = "N/A"  
+                $FileHash = ""      
             }
 
             # Grab file meta data info
@@ -1453,6 +1456,7 @@ function Invoke-HuntRegistryAutorun {
                                    $RegName,
                                    $ResultValue,
                                    $TargetPath,
+                                   $FileHash,
                                    $FileInfo.GetAccessControl().Owner,
                                    $FileInfo.CreationTime,
                                    $FileInfo.LastWriteTime,
