@@ -1344,6 +1344,22 @@ function Add-Win32Type
   }
 }
 
+# /////////////////////////////////////////////////////
+# Get-FileMd5
+# /////////////////////////////////////////////////////
+function Get-FileMd5{
+    
+    param (
+        [string]$FilePath
+    )
+
+$md5 = New-Object -TypeName System.Security.Cryptography.MD5CryptoServiceProvider
+$stream = [System.IO.File]::Open("$FilePath",[System.IO.Filemode]::Open, [System.IO.FileAccess]::Read) 
+$hash = [System.BitConverter]::ToString($md5.ComputeHash($stream))
+$stream.Close()
+$hash.tostring().replace('-','').trim()
+}
+
 # ///////////////////////////////////////
 #  Get reg run information
 # ///////////////////////////////////////
@@ -1356,8 +1372,8 @@ function Invoke-HuntRegistryAutorun {
 
     # Data table for results
     $TableResults = New-Object System.Data.DataTable 
-	$TableResults.Columns.Add('DataSource1') | Out-Null
-	$TableResults.Columns.Add('DataSource2') | Out-Null
+    $TableResults.Columns.Add('DataSource1') | Out-Null
+    $TableResults.Columns.Add('DataSource2') | Out-Null
     $TableResults.Columns.Add('PsPath') | Out-Null
     $TableResults.Columns.Add('PsParentPath') | Out-Null
     $TableResults.Columns.Add('PsChildName') | Out-Null
