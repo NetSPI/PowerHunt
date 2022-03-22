@@ -30,8 +30,21 @@ function Invoke-HuntPersistPR
             .PARAMETER ComputerList
             Target list of computers with this file path, Active Directory discovery is disabled when using this method.	    
             .EXAMPLE
-            PS C:\> command
-            output                     : 
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100
+            .EXAMPLE
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1
+            .EXAMPLE
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Credentials domain\user
+            .EXAMPLE
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Username domain\user -Password 'SecretPasswordHere!'
+            .EXAMPLE
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -ComputerName Desktop123
+            .EXAMPLE
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -ComputerList c:\temp\computers.txt
+            .EXAMPLE
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -CollectOnly
+            .EXAMPLE
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -AnalyzeOnly -OfflinePath c:\temp\Hunt-032120222126                     : 
     #>
     [CmdletBinding()]
     Param(
