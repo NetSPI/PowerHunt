@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.27
+# Version: 0.28
 function Invoke-HuntPersistPR
 {    
    <#
@@ -79,6 +79,12 @@ function Invoke-HuntPersistPR
         
         # Set variables
         $GlobalThreadCount = $Threads
+
+        # Create credentials from provide vars
+        if($Username -and $Password){
+            $secpass = ConvertTo-SecureString $Password -AsPlainText -Force
+            $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($Username, $secpass)
+        }
 
         Write-Output " ==========================================="
         Write-Output " INVOKE-HUNTPERSISTPR"
