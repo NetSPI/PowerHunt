@@ -1444,7 +1444,7 @@ foreach {
     
         # Create new object to return
         $Object = New-Object PSObject
-	$Object | add-member DataSource1          Connections"
+	$Object | add-member DataSource1          "Connections"
 	$Object | add-member DataSource2 	  "Get-NetTCPConnection and Get-WMIObject Win32_Process"	
         $Object | add-member LocalAddress         $ConnLocalAddress
         $Object | add-member LocalPort            $ConnLocalPort
