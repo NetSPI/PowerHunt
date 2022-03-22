@@ -16,7 +16,6 @@ BSD 3-Clause
 
 Primary Todo
 --
-* Analysis: Verify all results.
 * Analysis: Add counts for all data sources
 * Finalize credentials passthrough to ldap and remoting sessions
 * Help: update baked in help and add to mainscreen
