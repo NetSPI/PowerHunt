@@ -25,6 +25,7 @@ Primary Todo
 * show help text here  
 * add log file
 * Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
+* copy text from github loads fine, but when unzipped and run it breaks... why!?! Character encoding?
 
 
 
