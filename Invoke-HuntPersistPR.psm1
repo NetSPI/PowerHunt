@@ -1,21 +1,38 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.28
+# Version: 0.30
 function Invoke-HuntPersistPR
 {    
-   <#
-   
-   # on a non domain system
-   runas /netonly /user:domain\user powershell.exe
-   Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp\test -DomainController 10.1.1.1 -Username domain\user -password 'password'
-   Invoke-HuntPersistPR -Threads 100 -OutputDirectory c:\temp\test -DomainController 10.1.1.1 -Credential domain\user
-
-   # on a domain system
-   Invoke-HuntPersistPR -OutputDirectory "c:\temp\now" -Threads 100 -DomainController 10.1.1.1
-   or
-   Invoke-HuntPersistPR -OutputDirectory "c:\temp\now" -Threads 100 	
-   #>
+ <#
+            .SYNOPSIS
+            This is a modular threat hunting framework designed to perform data collection via PowerShell remoting and offline analysis using easy to build modules.
+            .PARAMETER Username
+            Local or domain account to authenticate with.
+            .PARAMETER Password
+            Local or domain account password to authenticate with.
+            .PARAMETER Credential
+            Local or domain credential.
+            .PARAMETER DomainController
+            Domain controller to communicate with for computer discovery.
+            .PARAMETER Threads
+            Number of runspace threads to use during ping and port scanning.
+            .PARAMETER RunSpaceTimeOut
+            RunSpaceTimeOut.
+            .PARAMETER CollectOnly
+            Only run collection modules, no analysis modules.	    
+            .PARAMETER AnalyzeOnly
+            Only run analysis modules against offline data.  Requires OfflinePath.
+            .PARAMETER OfflinePath
+            Collection scan directory. Can either be from full scan or CollectOnly scan.
+            .PARAMETER ComputerName
+            Target single system, Active Directory discovery is disabled when using this method.
+            .PARAMETER ComputerList
+            Target list of computers with this file path, Active Directory discovery is disabled when using this method.	    
+            .EXAMPLE
+            PS C:\> command
+            output                     : 
+    #>
     [CmdletBinding()]
     Param(
        [Parameter(Mandatory = $false,
@@ -52,11 +69,11 @@ function Invoke-HuntPersistPR
         [switch] $ShowRunpaceError,
 
         [Parameter(Mandatory = $false,
-        HelpMessage = 'Show runspace errors if they occur.')]
+        HelpMessage = 'Only run collection modules.')]
         [switch] $CollectOnly,
 
         [Parameter(Mandatory = $false,
-        HelpMessage = 'Only analyze offline data.  Requires OfflinePath.')]
+        HelpMessage = 'Only run analysis modules against offline data.  Requires OfflinePath.')]
         [switch] $AnalyzeOnly,
 
         [Parameter(Mandatory = $false,
