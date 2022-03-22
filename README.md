@@ -17,7 +17,6 @@ BSD 3-Clause
 Primary Todo
 --
 * Analysis: Add counts for all data sources
-* Finalize credentials passthrough to ldap and remoting sessions
 * Help: update baked in help and add to mainscreen
 * make formal ps module 
 * Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
