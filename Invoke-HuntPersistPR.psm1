@@ -559,12 +559,12 @@ function Invoke-HuntPersistPR
             
                 # Generate data source file path
                 $CollectionModuleFile = $_.name -replace(".ps1",".csv")
-                if(Test-Path "$OfflinePath"){ $TargetDomain = '*' }
+                if($OfflinePath){ $TargetDomain = '*' }
                 $CollectionDataSourcePath = "$OutputDirectory\collection\$TargetDomain-$CollectionModuleFile"   
 
                 # Select analysis modules that match the current data source name
                 # This is based on the collection file name
-                if(Test-Path "$OfflinePath"){ $TargetDomain = "OfflineAnalysis" }
+                if($OfflinePath){ $TargetDomain = "OfflineAnalysis" }
                 $AnalysisModulesT = Get-ChildItem .\windows\modules\analysis | where fullname -like "*$CollectionDataSource*"
                 $AnalysisModulesCountT = $AnalysisModulesT | measure | select count -ExpandProperty count    
             
