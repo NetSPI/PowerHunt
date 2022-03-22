@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.23
+# Version: 0.24
 function Invoke-HuntPersistPR
 {    
    <#
