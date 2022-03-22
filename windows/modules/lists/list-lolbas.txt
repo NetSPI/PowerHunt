@@ -15,7 +15,6 @@ regsvcs.exe
 csc.exe
 java.exe
 reg.exe
-msiexec.exe
 remote.exe 
 cscript.exe
 netsh.exe
