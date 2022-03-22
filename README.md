@@ -20,8 +20,6 @@ Primary Todo
 * Add single target
 * Add group of targets
 * Finalize credentials passthrough to ldap and remoting sessions
-* Add -OnlyCollection flag
-* Add -OnlyAnalysis -SourcePath flags
 * update baked in help
 * make formal ps module 
 * show help text here  
