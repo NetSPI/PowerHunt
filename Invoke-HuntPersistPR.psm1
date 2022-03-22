@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.25
+# Version: 0.27
 function Invoke-HuntPersistPR
 {    
    <#
@@ -104,7 +104,7 @@ function Invoke-HuntPersistPR
                 if(-not $AnalyzeOnly){
 
                     # Verify output directory path
-                    $FolderDateTime =  Get-Date -Format "MMddyyyyHHmm"
+                    $FolderDateTime =  Get-Date -Format "MMddyyyyHHmmss"
                     $OutputDirectory = "$OutputDirectory\Hunt-$FolderDateTime"
                     Write-Output " [+][$Time] Output Directory: $OutputDirectory"
 
@@ -128,11 +128,11 @@ function Invoke-HuntPersistPR
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             if(Test-Path .\windows\modules){
              # Write-Output " [+][$Time] The windows\modules directory was found."
-            }else{
+        }else{
              Write-Output " [x][$Time] The windows\modules directory was not found."
              Write-Output " [!][$Time] Aborting operation."
              break
-            }    
+        }    
 
             # Get start time
             $StartTime = Get-Date
@@ -149,8 +149,8 @@ function Invoke-HuntPersistPR
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 Write-Output " [x][$Time] This is not a privileged processed, aborting operation."
                 Write-Output " [!][$Time] Make sure to run this in a privileged process that can run the commands:"
-                Write-Output "    [$Time]  Enable-PSRemoting –force"
-                Write-Output "    [$Time]  Set-Service WinRM -StartMode Automatic"
+                Write-Output "    [$Time]  Enable-PSRemoting force"
+                Write-Output "    [$Time]  Set-Service WinRM StartMode Automatic"
                 Write-Output "    [$Time]  Set-Item WSMan:localhost\client\trustedhosts -value *"
                 break
             }else{
@@ -361,7 +361,7 @@ function Invoke-HuntPersistPR
 
 
             Write-Output " -------------------------------------------"
-            Write-Output " DISCOVERY: PORT SCANNING (5985/5986)"
+            Write-Output " DISCOVERY: PORT SCANNING `(5985/5986`)"
             Write-Output " -------------------------------------------"
 
         
@@ -410,7 +410,7 @@ function Invoke-HuntPersistPR
 
             # Status user
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            $Computers5985OpenCount = $Computers5985Open.count
+            $Computers5985OpenCount = $Computers5985Open | measure | select count -ExpandProperty count
             Write-Output " [+][$Time] - $Computers5985OpenCount computers have TCP port 5985 open."                
 
             # Save results
@@ -464,7 +464,7 @@ function Invoke-HuntPersistPR
             $Computers5986Open = $ComputersPingableClean | Invoke-Parallel -ScriptBlock $MyScriptBlock -ImportSessionFunctions -ImportVariables -Throttle $GlobalThreadCount -RunspaceTimeout $RunSpaceTimeOut -ErrorAction SilentlyContinue
 
             # Status user
-            $Computers5986OpenCount = $Computers5986Open.count
+            $Computers5986OpenCount = $Computers5986Open | measure | select count -ExpandProperty count
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             Write-Output " [+][$Time] - $Computers5986OpenCount computers have TCP port 5986 open."            
 
@@ -552,24 +552,20 @@ function Invoke-HuntPersistPR
                 $ModuleStartTime = Get-Date
 
                 # Run module
-                Write-Output " [+][$Time] - ($CurrentModulesCount of $CollectionModulesCount) $ModuleName"
-                # Write-Output " [+][$Time] - Running module..."
+                Write-Output " [+][$Time] - `($CurrentModulesCount of $CollectionModulesCount`) $ModuleName"
+
                 $MyCommand = Get-Content $_.fullname -Raw
                 $Results = Invoke-Command -Session (Get-PSSession | where state -like "Opened") -ScriptBlock {Invoke-Expression -Command  "$args"} -ArgumentList $MyCommand -ErrorAction SilentlyContinue
                 $ModuleStopTime = Get-Date
                 $ModuleDuration = $ModuleStopTime - $ModuleStartTime
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                # Write-Output " [+][$Time] - Completed"
-                # Write-Output " [+][$Time] - Duration: $ModuleDuration"
 
                 # Save output
                 $FileName = $_.name -replace(".ps1",".csv")
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 # Write-Output " [+][$Time] - Saving to $OutputDirectory\collection\Hunt-$FileName"
                 $Results | Export-Csv -NoTypeInformation "$OutputDirectory\collection\Hunt-$FileName"
-
             }
-
         }
 
         # Run analysis modules if collectonly not set
@@ -619,7 +615,7 @@ function Invoke-HuntPersistPR
                 # Parse module name from file
                 $CollectionDataSource = $_.name -replace(".ps1","") -replace("collect-","")
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                Write-Output " [+][$Time] Data Source ($CollectionModulesCountP of $CollectionModulesCount): $CollectionDataSource"
+                Write-Output " [+][$Time] Data Source `($CollectionModulesCountP of $CollectionModulesCount`): $CollectionDataSource"
             
                 # Generate data source file path
                 $CollectionModuleFile = $_.name -replace(".ps1",".csv")
@@ -633,9 +629,9 @@ function Invoke-HuntPersistPR
                 $AnalysisModulesCountT = $AnalysisModulesT | measure | select count -ExpandProperty count    
             
                 if($AnalysisModulesCountT -eq 0){
-                    Write-Output " [+][$Time] - No analysis modules exist for this data source." 
+                    Write-Output " [+][$Time]   0 analysis modules exist for this data source." 
                 }else{
-                    Write-Output " [+][$Time] - $AnalysisModulesCountT analysis modules found, loading data source."
+                    Write-Output " [+][$Time]   $AnalysisModulesCountT analysis modules found, loading data source."
 
                     # load the data source data here
                     $CollectedData = Import-Csv $CollectionDataSourcePath
@@ -659,7 +655,7 @@ function Invoke-HuntPersistPR
 
                     # Load and run analysis module
                     $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
-                    Write-Output " [+][$Time] - ($AnalysisModulesCountP of $AnalysisModulesCountT) $AnalysisModuleName"           
+                    Write-Output " [+][$Time]   - `($AnalysisModulesCountP of $AnalysisModulesCountT`) $AnalysisModuleName"           
                 
                     # Get module code
                     $AnalysisCommand = Get-Content $AnalysisModuleFilePath -Raw
@@ -673,11 +669,12 @@ function Invoke-HuntPersistPR
             Write-Output " -------------------------------------------"
             Write-Output " REPORTING: RUN ALL MODULES"
             Write-Output " -------------------------------------------"
-            Write-Output " - HTML (pending)"
+            Write-Output " - HTML `(pending`)"
         }
 
         # Shutdown active sessions if not offline mode / analysis only
         if(-not $OfflinePath){ 
+
             Write-Output " -------------------------------------------"
             Write-Output " SHUTDOWN"
             Write-Output " -------------------------------------------"
