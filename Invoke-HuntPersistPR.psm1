@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-HuntPersistPR
 # -------------------------------------------
-# Version: 0.24
+# Version: 0.25
 function Invoke-HuntPersistPR
 {    
    <#
@@ -61,7 +61,15 @@ function Invoke-HuntPersistPR
 
         [Parameter(Mandatory = $false,
         HelpMessage = 'Collection scan directory. Can either be from full scan or CollectOnly scan.')]
-        [string]$OfflinePath
+        [string]$OfflinePath,
+
+        [Parameter(Mandatory = $false,
+        HelpMessage = 'Target a single computer. This will disable LDAP discovery.')]
+        [string]$ComputerName,
+
+        [Parameter(Mandatory = $false,
+        HelpMessage = 'Target a list of computers. This will disable LDAP discovery.')]
+        [string]$ComputerList
         
     )
 	
@@ -75,9 +83,46 @@ function Invoke-HuntPersistPR
         Write-Output " ==========================================="
         Write-Output " INVOKE-HUNTPERSISTPR"
         Write-Output " ==========================================="
+        $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+
+        # Check for CollectOnly mode
+        if($CollectOnly){            
+            Write-Output " [+][$Time] COLLECT ONLY MODE"
+        }
+
+        # Check for AnalyzeOnly mode
+        if($AnalyzeOnly){
+            Write-Output " [+][$Time] ANALYZE ONLY MODE"
+        }
+
+        # Create output directory
+        if(Test-Path $OutputDirectory){                                
+
+            # Create sub directory for output
+            try{
+
+                if(-not $AnalyzeOnly){
+
+                    # Verify output directory path
+                    $FolderDateTime =  Get-Date -Format "MMddyyyyHHmm"
+                    $OutputDirectory = "$OutputDirectory\Hunt-$FolderDateTime"
+                    Write-Output " [+][$Time] Output Directory: $OutputDirectory"
+
+                    # Create sub directories
+                    mkdir $OutputDirectory | Out-Null
+                    mkdir "$OutputDirectory\collection" | Out-Null
+                    mkdir "$OutputDirectory\analysis" | Out-Null
+                    mkdir "$OutputDirectory\discovery" | Out-Null
+                }
+            }catch{
+                Write-Output " [x][$Time] The $OutputDirectory was not writable."
+                Write-Output " [!][$Time] Aborting operation."
+                break
+            }
+        }
 
         # Run collection if analyze only not set
-        if(-not $AnalyzeOnly){
+        if(-not $AnalyzeOnly){            
 
             # Check for modules direcroty 
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
@@ -162,92 +207,113 @@ function Invoke-HuntPersistPR
                 }
             }
 
+            # ----------------------------------------------------------------------
+            # Target: Single Computer
+            # ----------------------------------------------------------------------
+            $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+            if($ComputerName){
+
+                # Set target to single computer
+                Write-Output " -------------------------------------------"
+                Write-Output " TARGET: Single Computer"
+                Write-Output " -------------------------------------------"
+                Write-Output " [+][$Time] - $ComputerName"
+                $DomainComputers = $ComputerName
+                $ComputerCount = 1
+            }
 
             # ----------------------------------------------------------------------
-            # Enumerate domain computers 
+            # Target: List of Computers
             # ----------------------------------------------------------------------
-
-            # Set target domain 
-            Write-Output " -------------------------------------------"
-            Write-Output " DISCOVERY: DOMAIN COMPUTERS - LDAP QUERY"
-            Write-Output " -------------------------------------------"       
-
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] Attempting to access domain controller..."          
-            $DCRecord = Get-LdapQuery -LdapFilter "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" -DomainController $DomainController -Username $username -Password $Password -Credential $Credential | select -first 1 | select properties -expand properties -ErrorAction SilentlyContinue
-            [string]$DCHostname = $DCRecord.dnshostname
-            [string]$DCCn = $DCRecord.cn
-            [string]$TargetDomain = $DCHostname -replace ("$DCCn\.","") 
-        
-            $Time =  Get-Date -UFormat "%m/%d/%Y %R"        
-            if($DCHostname)
-            {
-                Write-Output " [+][$Time] Successful connection to domain controller: $DCHostname"             
-            }else{
-                Write-Output " [x][$Time] There appears to have been an error connecting to the domain controller."
-                Write-Output " [!][$Time] Aborting."
-                break
-            }           
+            if($ComputerList){
 
-            # Verify output directory exists
-            $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            if(Test-Path $OutputDirectory){
-                # Write-Output " [+][$Time] The $OutputDirectory directory was found."
-            
-                # Create sub directory for output
-                try{
-                    $FolderDateTime =  Get-Date -Format "MMddyyyyHHmm"
-                    $OutputDirectory = "$OutputDirectory\$TargetDomain-$FolderDateTime"
-                    mkdir $OutputDirectory | Out-Null
-                    mkdir "$OutputDirectory\collection" | Out-Null
-                    mkdir "$OutputDirectory\analysis" | Out-Null
-                    mkdir "$OutputDirectory\discovery" | Out-Null
-                }catch{
-                    Write-Output " [x][$Time] The $OutputDirectory was not writable."
-                    Write-Output " [!][$Time] Aborting operation."
+                # Set target to single computer
+                Write-Output " -------------------------------------------"
+                Write-Output " TARGET: Computer List"
+                Write-Output " -------------------------------------------"
+                Write-Output " [+][$Time] - $ComputerList"
+                
+                # Test computer list path
+                if(Test-Path $ComputerList){
+
+                    # Get computer list
+                    $DomainComputers = gc $ComputerList
+                    $ComputerCount = $DomainController.count
+                    
+                }else{
+                    Write-Output " [!][$Time] - Invalid path."
+                    Write-Output " [x][$Time] - Aborting operation."
                     break
                 }
-            }else{
-                Write-Output " [x][$Time] The $OutputDirectory directory was not found."
-                Write-Output " [!][$Time] Aborting operation."
-                break
             }
 
-            # Status user
-            Write-Output " [+][$Time] Performing LDAP query for computers associated with the $TargetDomain domain"
+            # ----------------------------------------------------------------------
+            # Target: Domain Computers
+            # ----------------------------------------------------------------------
 
-            # Get domain computers        
-            $DomainComputersRecord = Get-LdapQuery -LdapFilter "(objectCategory=Computer)" -DomainController $DomainController -Username $username -Password $Password
-            $DomainComputers = $DomainComputersRecord | 
-            foreach{
+            # Only perform discovery if hosts are not provided
+            if(-not $ComputerList -and -not $ComputerName){
+
+                # Set target domain 
+                Write-Output " -------------------------------------------"
+                Write-Output " DISCOVERY: DOMAIN COMPUTERS - LDAP QUERY"
+                Write-Output " -------------------------------------------"       
+
+                $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+                Write-Output " [!][$Time] TARGET: Domain Computers"
+                Write-Output " [+][$Time] Attempting to access domain controller..."          
+                $DCRecord = Get-LdapQuery -LdapFilter "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" -DomainController $DomainController -Username $username -Password $Password -Credential $Credential | select -first 1 | select properties -expand properties -ErrorAction SilentlyContinue
+                [string]$DCHostname = $DCRecord.dnshostname
+                [string]$DCCn = $DCRecord.cn
+                [string]$TargetDomain = $DCHostname -replace ("$DCCn\.","") 
+        
+                $Time =  Get-Date -UFormat "%m/%d/%Y %R"        
+                if($DCHostname)
+                {
+                    Write-Output " [+][$Time] Successful connection to domain controller: $DCHostname"             
+                }else{
+                    Write-Output " [x][$Time] There appears to have been an error connecting to the domain controller."
+                    Write-Output " [!][$Time] Aborting."
+                    break
+                }                           
+
+                # Status user
+                Write-Output " [+][$Time] Performing LDAP query for computers associated with the $TargetDomain domain"
+
+                # Get domain computers        
+                $DomainComputersRecord = Get-LdapQuery -LdapFilter "(objectCategory=Computer)" -DomainController $DomainController -Username $username -Password $Password
+                $DomainComputers = $DomainComputersRecord | 
+                foreach{
                 
-                $DnsHostName = [string]$_.Properties['dnshostname']
-                if($DnsHostName -notlike ""){
-                    $object = New-Object psobject
-                    $Object | Add-Member Noteproperty ComputerName $DnsHostName
-                    $Object      
+                    $DnsHostName = [string]$_.Properties['dnshostname']
+                    if($DnsHostName -notlike ""){
+                        $object = New-Object psobject
+                        $Object | Add-Member Noteproperty ComputerName $DnsHostName
+                        $Object      
+                    }
                 }
+
+                # Status user
+                $ComputerCount = $DomainComputers.count
+                Write-Output " [+][$Time] - $ComputerCount computers found"
+
+                # Save results
+                # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers.csv"
+                $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers.csv"
+                # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
+                $DomainComputersFile = "Hunt-Domain-Computers.csv"
+                #$DomainComputersFileH = "Hunt-Domain-Computers.html"
+
+                Write-Output " [+][$Time] Output directory: $OutputDirectory"
             }
-
-            # Status user
-            $ComputerCount = $DomainComputers.count
-            Write-Output " [+][$Time] - $ComputerCount computers found"
-
-            # Save results
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers.csv"
-            $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers.csv"
-            # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
-            $DomainComputersFile = "$TargetDomain-Domain-Computers.csv"
-            #$DomainComputersFileH = "$TargetDomain-Domain-Computers.html"
-
-            Write-Output " [+][$Time] Output directory: $OutputDirectory"
 
             # ----------------------------------------------------------------------
             # Identify computers that respond to ping reqeusts
             # ----------------------------------------------------------------------
 
             Write-Output " -------------------------------------------"
-            Write-Output " DISCOVERY: DOMAIN COMPUTERS - PING SCANS"
+            Write-Output " DISCOVERY: PING SCANNING"
             Write-Output " -------------------------------------------"
 
             # Status user
@@ -261,19 +327,19 @@ function Invoke-HuntPersistPR
             $ComputersPingable = $PingResults |
             foreach {
 
-                $computername = $_.address
+                $PingComputerName = $_.address
                 $status = $_.status
                 if($status -like "Responding"){
-                    $object = new-object psobject            
-                    $Object | add-member Noteproperty ComputerName $computername
-                    $Object | add-member Noteproperty status $status
+                    $object = new-object psobject                                                    
+                    $Object | add-member Noteproperty ComputerName $PingComputerName 
+                    $Object | add-member Noteproperty status       $status
                     $Object
                 }
             }
 
             # Status user
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            $ComputerPingableCount = $ComputersPingable.count
+            $ComputerPingableCount = $ComputersPingable | measure | select count -expandproperty count
             Write-Output " [+][$Time] - $ComputerPingableCount computers responded to ping requests."
         
             # Stop if no hosts are accessible
@@ -287,15 +353,15 @@ function Invoke-HuntPersistPR
 
             # Save results
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Pingable.csv"
-            $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Pingable.csv"
-            #$null = Convert-DataTableToHtmlTable -DataTable $ComputersPingable -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Pingable.html" -Title "Domain Computers: Ping Response" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain that responded to ping requests."
-            $ComputersPingableFile = "$TargetDomain-Domain-Computers-Pingable.csv"
-            #$ComputersPingableFileH =  "$TargetDomain-Domain-Computers-Pingable.html"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers-Pingable.csv"
+            $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-Pingable.csv"
+            #$null = Convert-DataTableToHtmlTable -DataTable $ComputersPingable -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers-Pingable.html" -Title "Domain Computers: Ping Response" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain that responded to ping requests."
+            $ComputersPingableFile = "Hunt-Domain-Computers-Pingable.csv"
+            #$ComputersPingableFileH =  "Hunt-Domain-Computers-Pingable.html"
 
 
             Write-Output " -------------------------------------------"
-            Write-Output " DISCOVERY: DOMAIN COMPUTERS - PORT SCANS"
+            Write-Output " DISCOVERY: PORT SCANNING (5985/5986)"
             Write-Output " -------------------------------------------"
 
         
@@ -348,11 +414,11 @@ function Invoke-HuntPersistPR
             Write-Output " [+][$Time] - $Computers5985OpenCount computers have TCP port 5985 open."                
 
             # Save results
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5985.csv"        
-            $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5985.csv"
-            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
-            $Computers5985OpenFile = "$TargetDomain-Domain-Computers-Open5985.csv"
-            #$Computers5985OpenFileH ="$TargetDomain-Domain-Computers-Open5985.html"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers-Open5985.csv"        
+            $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5985.csv"
+            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
+            $Computers5985OpenFile = "Hunt-Domain-Computers-Open5985.csv"
+            #$Computers5985OpenFileH ="Hunt-Domain-Computers-Open5985.html"
 
             # ----------------------------------------------------------------------
             # Identify computers that have TCP 5986 open and accessible
@@ -403,11 +469,11 @@ function Invoke-HuntPersistPR
             Write-Output " [+][$Time] - $Computers5986OpenCount computers have TCP port 5986 open."            
 
             # Save results
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\$TargetDomain-Domain-Computers-Open5986.csv"        
-            $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5986.csv"
-            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
-            $Computers5986OpenFile = "$TargetDomain-Domain-Computers-Open5986.csv"
-            #$Computers5986OpenFileH ="$TargetDomain-Domain-Computers-Open5986.html"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers-Open5986.csv"        
+            $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5986.csv"
+            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
+            $Computers5986OpenFile = "Hunt-Domain-Computers-Open5986.csv"
+            #$Computers5986OpenFileH ="Hunt-Domain-Computers-Open5986.html"
 
             # ----------------------------------------------------------------------
             # Create PS Remoting Sessions
@@ -428,8 +494,8 @@ function Invoke-HuntPersistPR
                 # Save results
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 Write-Output " [+][$Time] - $PsRemotingTargetsAllCount computers will be targeted."
-                # Write-Output " [+][$Time] - Saving to $OutputDirectory\discovery\$TargetDomain-Domain-Computers-PsRemoting.csv"        
-                $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\$TargetDomain-Domain-Computers-PsRemoting.csv"        
+                # Write-Output " [+][$Time] - Saving to $OutputDirectory\discovery\Hunt-Domain-Computers-PsRemoting.csv"        
+                $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-PsRemoting.csv"        
             }
 
             Write-Output " -------------------------------------------"
@@ -499,8 +565,8 @@ function Invoke-HuntPersistPR
                 # Save output
                 $FileName = $_.name -replace(".ps1",".csv")
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                # Write-Output " [+][$Time] - Saving to $OutputDirectory\collection\$TargetDomain-$FileName"
-                $Results | Export-Csv -NoTypeInformation "$OutputDirectory\collection\$TargetDomain-$FileName"
+                # Write-Output " [+][$Time] - Saving to $OutputDirectory\collection\Hunt-$FileName"
+                $Results | Export-Csv -NoTypeInformation "$OutputDirectory\collection\Hunt-$FileName"
 
             }
 
@@ -508,7 +574,6 @@ function Invoke-HuntPersistPR
 
         # Run analysis modules if collectonly not set
         if( -not $CollectOnly){
-        
             Write-Output " -------------------------------------------"
             Write-Output " ANALYSIS: RUN ALL MODULES"
             Write-Output " -------------------------------------------"
@@ -516,7 +581,6 @@ function Invoke-HuntPersistPR
             # Check offline path if analysis model
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             if($AnalyzeOnly){
-                Write-Output " [+][$Time] ANALYSIS ONLY MODE"
                 if(-not $OfflinePath){
                     Write-Output " [!][$Time] Analysis only mode failed.  Missing OfflinePath."
                     Write-Output " [x][$Time] Aborting operation."
@@ -560,7 +624,7 @@ function Invoke-HuntPersistPR
                 # Generate data source file path
                 $CollectionModuleFile = $_.name -replace(".ps1",".csv")
                 if($OfflinePath){ $TargetDomain = '*' }
-                $CollectionDataSourcePath = "$OutputDirectory\collection\$TargetDomain-$CollectionModuleFile"   
+                $CollectionDataSourcePath = "$OutputDirectory\collection\Hunt-$CollectionModuleFile"   
 
                 # Select analysis modules that match the current data source name
                 # This is based on the collection file name
