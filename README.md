@@ -16,16 +16,13 @@ BSD 3-Clause
 
 Primary Todo
 --
-* Finish count analysis for all data sources
-* Add single target
-* Add group of targets
+* Analysis: Verify all results.
+* Analysis: Add counts for all data sources
 * Finalize credentials passthrough to ldap and remoting sessions
-* update baked in help
+* Help: update baked in help and add to mainscreen
 * make formal ps module 
-* show help text here  
-* add log file
-* Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
-* copy text from github loads fine, but when unzipped and run it breaks... why!?! Character encoding?
+* Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
+* copy text from github loads fine, but when unzipped and run it breaks...Character encoding?
 
 
 
