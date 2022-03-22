@@ -8,6 +8,7 @@
 #          and is used to collect wmi provider data.
 # License: 3-clause BSD
 
+
 # ///////////////////////////////////////
 #  Load Get-PESecurity
 # ///////////////////////////////////////
@@ -1350,21 +1351,22 @@ function Add-Win32Type
 # ///////////////////////////////////////
 function Get-Providers
 {
+    # Get provider information
     Get-WmiObject -NameSpace $ns -Class __Win32Provider | select Name,__PATH, __NAMESPACE, CLSID, AssemblyPath, ImpersonationLevel |
     ForEach-Object {    
 
         # Create required PS drive
-        New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR -ErrorAction SilentlyContinue
+        New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR -ErrorAction SilentlyContinue | Out-Null
 
         # Get dll path
         $CLSID = $_.CLSID
         if($CLSID){
             $CLISD_KEY = "HKCR:\CLSID\$CLSID\InprocServer32\"
-            $CLSID_DLL = Get-ItemProperty  "HKCR:\CLSID\$CLSID\InprocServer32\" | Select-Object "(default)" -ExpandProperty "(default)"        
+            $CLSID_DLL = Get-ItemProperty  "HKCR:\CLSID\$CLSID\InprocServer32\" -ErrorAction SilentlyContinue | Select-Object "(default)" -ExpandProperty "(default)"        
         }
 
         # Grab PE info
-        $PEConfig = Get-PESecurity -File $CLSID_DLL
+        $PEConfig = Get-PESecurity -File $CLSID_DLL 
         $ARCH = $PEConfig.ARCH
         $ASLR = $PEConfig.ASLR
         $Authenticode = $PEConfig.Authenticode
@@ -1376,24 +1378,28 @@ function Get-Providers
         $StrongNaming = $PEConfig.StrongNaming             
 
         # Grab file meta data info
-        $FileInfo = Get-Item $CLSID_DLL
+        if($CLSID_DLL){
+            $FileInfo = Get-Item $CLSID_DLL
+            $FileOwner            = $FileInfo.GetAccessControl().Owner
+            $FileCreationTime     = $FileInfo.CreationTime
+            $FileLastWriteTime    = $FileInfo.LastWriteTime
+            $FileLastAccessTime   = $FileInfo.LastAccessTime
+        }
 
         $Object = New-Object PSObject
-		$Object | add-member DataSource1 "wmi provider"
-		$Object | add-member DataSource2 "Get-WmiObject -NameSpace $ns -Class __Win32Provider"		
-        $Object | add-member Noteproperty Name $_.Name
-        $Object | add-member Noteproperty __PATH $_.__PATH
+        $Object | add-member Noteproperty Name    $_.Name
+        $Object | add-member Noteproperty __PATH  $_.__PATH
         $Object | add-member Noteproperty __NAMESPACE $_.__NAMESPACE
-        $Object | add-member Noteproperty CLSID $_.CLSID
+        $Object | add-member Noteproperty CLSID   $_.CLSID
         $Object | add-member Noteproperty CLSID_Key $CLISD_KEY
         $Object | add-member Noteproperty CLSID_DLL $CLSID_DLL
         $Object | add-member Noteproperty AssemblyPath $_.AssemblyPath
         $Object | add-member Noteproperty ImpersonationLevel $_.ImpersonationLevel
         $Object | add-member FileName             $CLSID_DLL
-        $Object | add-member FileOwner            $FileInfo.GetAccessControl().Owner
-        $Object | add-member FileCreationTime     $FileInfo.CreationTime
-        $Object | add-member FileLastWriteTime    $FileInfo.LastWriteTime
-        $Object | add-member FileLastAccessTime   $FileInfo.LastAccessTime
+        $Object | add-member FileOwner            $FileOwner
+        $Object | add-member FileCreationTime     $FileCreationTime
+        $Object | add-member FileLastWriteTime    $FileLastWriteTime
+        $Object | add-member FileLastAccessTime   $FileLastAccessTime
         $Object | add-member ARCH                 $ARCH
         $Object | add-member ASLR                 $ASLR 
         $Object | add-member Authenticode         $Authenticode
@@ -1403,8 +1409,9 @@ function Get-Providers
         $Object | add-member HighentropyVA        $HighentropyVA
         $Object | add-member SafeSEH              $SafeSEH
         $Object | add-member StrongNaming         $StrongNaming
+
         $Object     
     } 
 }
 
-Get-Providers    
+Get-Providers
