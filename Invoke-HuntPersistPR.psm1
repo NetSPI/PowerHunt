@@ -44,7 +44,7 @@ function Invoke-HuntPersistPR
             .EXAMPLE
             PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -CollectOnly
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -AnalyzeOnly -OfflinePath c:\temp\Hunt-032120222126                     : 
+            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -AnalyzeOnly -OfflinePath c:\temp\Hunt-032120222126
     #>
     [CmdletBinding()]
     Param(
