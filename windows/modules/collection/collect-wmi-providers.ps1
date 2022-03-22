@@ -1,6 +1,6 @@
 # Script : Invoke-HuntPersistPR
 # Module : collect-wmi-providers
-# Version: 1.0
+# Version: 1.1
 # Author : Scott Sutherland
 # Author : Eric Gruber (Get-PESecurity)
 #          https://github.com/NetSPI/PESecurity/blob/master/Get-PESecurity.psm1
