@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.31
+# Version: 0.32
 function Invoke-PowerHunt
 {    
  <#
@@ -536,7 +536,7 @@ function Invoke-PowerHunt
             Write-Output " -------------------------------------------"
             Write-Output " COLLECTION: ESTABLISH PS REMOTING SESSIONS"
             Write-Output " -------------------------------------------"
-            Write-Output " [+][$Time] - Attempting to establish PS Remoting sessions with $PsRemotingTargetsAllCount systems."
+            Write-Output " [+][$Time] - Attempting to establish PS Remoting sessions with $PsRemotingTargetsAllCount computers."
             $PsRemotingTargetsAll | select ComputerName | 
             Foreach{
 
