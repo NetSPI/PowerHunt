@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.32
+# Version: 0.33
 function Invoke-PowerHunt
 {    
  <#
@@ -108,18 +108,26 @@ function Invoke-PowerHunt
     {
         
         # Set variables
+        $Time =  Get-Date -UFormat "%m/%d/%Y %R"
         $GlobalThreadCount = $Threads
+        $AuthMode = "Current User"
 
-        # Create credentials from provide vars
+        # Check for credential
+        if($Credential){
+            $AuthMode = "Credential"
+        }
+
+        # Check for username and password
         if($Username -and $Password){
             $secpass = ConvertTo-SecureString $Password -AsPlainText -Force
             $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($Username, $secpass)
+            $AuthMode = "Username and Password"
         }
 
         Write-Output " ==========================================="
         Write-Output " PowerHunt"
         Write-Output " ==========================================="
-        $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+        Write-Output " [+][$Time] Authentication Mode: $AuthMode"
 
         # Check for CollectOnly mode
         if($CollectOnly){            
