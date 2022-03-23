@@ -1,5 +1,0 @@
-LocalSystem
-LocalService
-NetworkService
-TrustedInstaller
-BUILTIN\Administrators
