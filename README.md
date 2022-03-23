@@ -1,6 +1,6 @@
 # PowerHunt
 <a href="https://github.com/NetSPI/PowerHunt/wiki"><strong>PowerHunt</strong></a> is a modular threat hunting framework written in PowerShell designed to: 
-*  <strong>Identify signs of compromise</strong> based on artifacts left behind by common MITRE ATT&CK techniques.  It is not designed for identifying known bad files/domains/IPs associated with specific APTs/malware. However, it would be easy to write modules for that. ;)
+*  <strong>Identify signs of compromise</strong> based on artifacts left behind by common MITRE ATT&CK techniques.  It is not designed for identifying known bad files/domains/IPs associated with specific APTs/malware. 
 --------
 * <strong>Authenticate</strong> using the current user context, a credential, or clear text user/password.
 * <strong>Discover</strong> accessible systems associated with a Active Directory domain automatically.
