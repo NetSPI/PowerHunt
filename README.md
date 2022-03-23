@@ -18,7 +18,7 @@ BSD 3-Clause
 
 Primary Todo
 --
-* Final run through of all tests (domain, nondomain system; auth type; target types)
+* Fix primary analysis count exports and rerun tests
 * Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 
 
