@@ -1,7 +1,7 @@
 # PowerHunt
 <a href="https://github.com/NetSPI/PowerHunt/wiki"><strong>PowerHunt</strong></a> is a modular hunting framework written in PowerShell designed to: 
 *  Identify signs of compromise based on artifacts left behind by common MITRE ATT&CK techniques.  It is not designed for identifying known bad files/domains/IPs associated with specific APTs/malware. However, it would be easy to write modules for that. ;)
-* <strong>Authenticate</script> using the current use context, a credential, or clear text user/password.
+* <strong>Authenticate</strong> using the current use context, a credential, or clear text user/password.
 * <strong>Discover</strong> accessible systems associated with a Active Directory domain automatically.
 * <strong>Target</strong> a single computer, list of computers, or discovered Active Directory computers (default).
 * <strong>Collect</strong> data source information from systems using PowerShell Remoting and easy to build collection modules.
