@@ -19,7 +19,7 @@ BSD 3-Clause
 Primary Todo
 --
 * Fix primary analysis count export file types and rerun tests
-* credential object is bombing for some reason - fix
+* credential object is bombing for some reason from non domain system, but password works (which is turned into a cred objects... so??)- fix
 * Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 
 
