@@ -22,13 +22,13 @@ Primary Todo
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 Add collection modules
 * add user and group collection - look for outliers
-*Registered antivirus (via WMI) - baselining -  look for outliers
-*EnvironmentPath - evil execution - look for outliers
-*EnvironmentVariables - evil payloads -  check for lolbins
-*MappedDrives - evil mapped drive anomonly - look for outliers
-*LocalGPOs - evil gpo - look for outliers
-*NetworkProfiles - look for dual homed
-*WindowsFirewall - check if disabled
+* Registered antivirus (via WMI) - baselining -  look for outliers
+* EnvironmentPath - evil execution - look for outliers
+* EnvironmentVariables - evil payloads -  check for lolbins
+* MappedDrives - evil mapped drive anomonly - look for outliers
+* LocalGPOs - evil gpo - look for outliers
+* NetworkProfiles - look for dual homed
+* WindowsFirewall - check if disabled
 
   
 
