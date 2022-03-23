@@ -1,0 +1,14 @@
+PSEXESVC
+csexecsvc
+RemComSvc
+dameware
+dwrcs
+dwrcc
+Anydesk
+ConnectWise
+tmate
+TNTRemote
+LogMeIn
+TeamViewer
+PowerAutomate
+teams

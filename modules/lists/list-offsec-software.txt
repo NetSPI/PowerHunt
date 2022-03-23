@@ -1,0 +1,7 @@
+wireshark
+winpcap
+cain
+nmap
+metasploit
+cobaltstrike
+miner
