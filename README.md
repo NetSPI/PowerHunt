@@ -8,7 +8,7 @@ It is designed to <strong>identify signs of compromise</strong> based on artifac
 * <strong>Analyze</strong> collected data using easy to build analysis modules based on behavior.
 * <strong>Report</strong> summary data and initial insights that can help analysts get started on simple threat hunting exercises that focus on common persistence and related techniques.
 
-This is not a novel approach to threat hunting, but I thought the project was worth sharing, because in certain environments the automation can be a time saver. <br><br>
+This is not a novel approach to threat hunting, but I thought the project was worth sharing, because in certain environments the automation can be a time saver. <br>
 User and developer guides can be found on the wiki  <a href="https://github.com/NetSPI/PowerHunt/wiki">here</a>.<Br>
 
 <strong>Author</strong><Br>
