@@ -19,7 +19,6 @@ BSD 3-Clause
 
 Primary Todo
 --
-* FIX: Providing a username/password work from non-domain system, but not credential?  No sure why, the user/password get converted into a credential object anyways.
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 
 
