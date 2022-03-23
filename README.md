@@ -16,9 +16,9 @@ BSD 3-Clause
 
 Primary Todo
 --
-* Analysis: Add counts for all data sources
-* Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 * Final run through of all tests (domain, nondomain system; auth type; target types)
+* Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
+
 
 
 
