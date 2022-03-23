@@ -20,6 +20,7 @@ BSD 3-Clause
 Primary Todo
 --
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
+* add user and group collection
 
 
 
