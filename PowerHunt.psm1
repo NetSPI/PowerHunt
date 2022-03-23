@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.33
+# Version: 0.35
 function Invoke-PowerHunt
 {    
  <#
@@ -306,7 +306,7 @@ function Invoke-PowerHunt
 
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 Write-Output " [+][$Time] Attempting to access domain controller..."          
-                $DCRecord = Get-LdapQuery -LdapFilter "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" -DomainController $DomainController -Username $username -Password $Password -Credential $Credential | select -first 1 | select properties -expand properties -ErrorAction SilentlyContinue
+                $DCRecord = Get-LdapQuery -LdapFilter "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" -DomainController $DomainController -Credential $Credential | select -first 1 | select properties -expand properties -ErrorAction SilentlyContinue
                 [string]$DCHostname = $DCRecord.dnshostname
                 [string]$DCCn = $DCRecord.cn
                 [string]$TargetDomain = $DCHostname -replace ("$DCCn\.","") 
@@ -325,7 +325,7 @@ function Invoke-PowerHunt
                 Write-Output " [+][$Time] Performing LDAP query for computers associated with the $TargetDomain domain"
 
                 # Get domain computers        
-                $DomainComputersRecord = Get-LdapQuery -LdapFilter "(objectCategory=Computer)" -DomainController $DomainController -Username $username -Password $Password
+                $DomainComputersRecord = Get-LdapQuery -LdapFilter "(objectCategory=Computer)" -DomainController $DomainController -Credential $Credential
                 $DomainComputers = $DomainComputersRecord | 
                 foreach{
                 
@@ -389,8 +389,7 @@ function Invoke-PowerHunt
             If ($ComputerPingableCount -eq 0)
             {
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                Write-Output " [x][$Time] - No computers responded to ping."
-                Write-Output " [!][$Time] - Aborting."
+                Write-Output " [x][$Time] - Aborting."
                 break
             }
 
@@ -832,7 +831,7 @@ function Get-LdapQuery
                 $ArgumentList = New-Object Collections.Generic.List[string]
                 $ArgumentList.Add("LDAP://$DomainController")
 
-                if($Username){
+                if($Username -or $Credential){
                     $ArgumentList.Add($Credential.UserName)
                     $ArgumentList.Add($Credential.GetNetworkCredential().Password)
                 }
