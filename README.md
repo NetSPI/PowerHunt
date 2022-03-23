@@ -18,7 +18,7 @@ BSD 3-Clause
 
 Primary Todo
 --
-* Fix primary analysis count exports and rerun tests
+* Fix primary analysis count export file types and rerun tests
 * Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 
 
