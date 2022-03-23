@@ -1,8 +1,8 @@
 # -------------------------------------------
-# Function: Invoke-HuntPersistPR
+# Function: Invoke-PowerHunt
 # -------------------------------------------
 # Version: 0.30
-function Invoke-HuntPersistPR
+function Invoke-PowerHunt
 {    
  <#
             .SYNOPSIS
@@ -30,21 +30,21 @@ function Invoke-HuntPersistPR
             .PARAMETER ComputerList
             Target list of computers with this file path, Active Directory discovery is disabled when using this method.	    
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Credentials domain\user
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Credentials domain\user
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Username domain\user -Password 'SecretPasswordHere!'
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100 -DomainController 10.1.1.1 -Username domain\user -Password 'SecretPasswordHere!'
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -ComputerName Desktop123
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100 -ComputerName Desktop123
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -ComputerList c:\temp\computers.txt
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100 -ComputerList c:\temp\computers.txt
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -Threads 100 -CollectOnly
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100 -CollectOnly
             .EXAMPLE
-            PS C:\> Invoke-HuntPersistPR -OutputDirectory "c:\temp" -AnalyzeOnly -OfflinePath c:\temp\Hunt-032120222126
+            PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -AnalyzeOnly -OfflinePath c:\temp\Hunt-032120222126
     #>
     [CmdletBinding()]
     Param(
@@ -117,7 +117,7 @@ function Invoke-HuntPersistPR
         }
 
         Write-Output " ==========================================="
-        Write-Output " INVOKE-HUNTPERSISTPR"
+        Write-Output " PowerHunt"
         Write-Output " ==========================================="
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
 
