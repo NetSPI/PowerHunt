@@ -19,7 +19,7 @@ BSD 3-Clause
 
 Primary Todo
 --
-* credential object is bombing for some reason from non domain system, but password works (which is turned into a cred objects... so??)- fix
+* Providing a username/password work from non-domain system, but not credential?  No sure why, the user/password get converted into a credential object anyways.
 * Report: Create an HTML summary report (summary for disco, collection, analysis; main page for each with dig in html files)
 
 
