@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.30
+# Version: 0.31
 function Invoke-PowerHunt
 {    
  <#
@@ -297,7 +297,6 @@ function Invoke-PowerHunt
                 Write-Output " -------------------------------------------"       
 
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                Write-Output " [!][$Time] TARGET: Domain Computers"
                 Write-Output " [+][$Time] Attempting to access domain controller..."          
                 $DCRecord = Get-LdapQuery -LdapFilter "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" -DomainController $DomainController -Username $username -Password $Password -Credential $Credential | select -first 1 | select properties -expand properties -ErrorAction SilentlyContinue
                 [string]$DCHostname = $DCRecord.dnshostname
@@ -836,7 +835,9 @@ function Get-LdapQuery
                 if(-not $objDomain){ throw }
 
             }catch{
-                Write-Host "Authentication failed or domain controller is not reachable."
+                $Time =  Get-Date -UFormat "%m/%d/%Y %R"
+                Write-Host " [!][$Time] Authentication failed or domain controller is not reachable."
+                Write-Host " [!][$Time] Aborting operation."
                 Break
             }
 
