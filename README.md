@@ -22,7 +22,6 @@ Primary Todo
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 Add collection modules
 * Registered antivirus (via WMI) - baselining -  look for outliers
-* MappedDrives - evil mapped drive anomonly - look for outliers
 * LocalGPOs - evil gpo - look for outliers
 * NetworkProfiles - look for dual homed
 * WindowsFirewall - check if disabled
