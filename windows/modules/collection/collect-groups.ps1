@@ -1,6 +1,6 @@
 
 # Script : Invoke-PowerHunt
-# Module : collect-group
+# Module : collect-groups
 # Version: 1.0
 # Author : Scott Sutherland
 # Summary: This is script is part of the PowerHunt framework and collect connection information.
