@@ -23,8 +23,6 @@ Primary Todo
 Add collection modules
 * add user and group collection - look for outliers
 * Registered antivirus (via WMI) - baselining -  look for outliers
-* EnvironmentPath - evil execution - look for outliers
-* EnvironmentVariables - evil payloads -  check for lolbins
 * MappedDrives - evil mapped drive anomonly - look for outliers
 * LocalGPOs - evil gpo - look for outliers
 * NetworkProfiles - look for dual homed
