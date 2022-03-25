@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.42
+# Version: 0.43
 function Invoke-PowerHunt
 {    
  <#
@@ -124,7 +124,7 @@ function Invoke-PowerHunt
         $AuthMode = "Current User"
 
         # Check for credential
-        if($Credential){
+        if($Credential.UserName){
             $AuthMode = "Credential"
         }
 
