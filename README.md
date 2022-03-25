@@ -1,6 +1,8 @@
 # PowerHunt
 <a href="https://github.com/NetSPI/PowerHunt/wiki"><strong>PowerHunt</strong></a> is a modular threat hunting framework written in PowerShell that leverages PowerShell Remoting for data collection on scale. <br><br> 
-It is designed to <strong>identify signs of compromise</strong> based on artifacts left behind by common MITRE ATT&CK techniques.  It is not designed identify known bad files, domains, or IPs associated with specific APTs/malware. Additionally, it supports functionality to:
+It is designed to <strong>identify signs of compromise</strong> based on artifacts left behind by common MITRE ATT&CK techniques, and the collected data can be used to identify anomalies and outliers specific to the target environment.  <em>It is not designed identify known bad files, domains, or IPs associated with specific APTs/malware.</em> 
+
+It supports functionality to:
 * <strong>Authenticate</strong> using the current user context, a credential, or clear text user/password.
 * <strong>Discover</strong> accessible systems associated with an Active Directory domain automatically.
 * <strong>Target</strong> a single computer, list of computers, or discovered Active Directory computers (default).
@@ -8,7 +10,6 @@ It is designed to <strong>identify signs of compromise</strong> based on artifac
 * <strong>Analyze</strong> collected data using easy to build analysis modules based on behavior.
 * <strong>Report</strong> summary data and initial insights that can help analysts get started on simple threat hunting exercises that focus on common persistence and related techniques.
 
-The general idea is to look for sign of compromise, but use the data collected to identify anomolies and outliers specific to the target environment.
 This is not a novel approach to threat hunting, but I thought the project was worth sharing, because in certain environments the automation can be a time saver. <br><br>
 User and developer guides can be found on the wiki  <a href="https://github.com/NetSPI/PowerHunt/wiki">here</a>.<Br>
 
