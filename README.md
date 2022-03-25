@@ -24,6 +24,7 @@ Primary Todo
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * FEATURE: exclude dc 
 * when using a host list, copy target list into the results directory
+* html report - target = domain, list, single
 
 
   
