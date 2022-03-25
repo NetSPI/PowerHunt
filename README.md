@@ -8,6 +8,7 @@ It is designed to <strong>identify signs of compromise</strong> based on artifac
 * <strong>Analyze</strong> collected data using easy to build analysis modules based on behavior.
 * <strong>Report</strong> summary data and initial insights that can help analysts get started on simple threat hunting exercises that focus on common persistence and related techniques.
 
+The general idea is to look for sign of compromise, but use the data collected to identify anomolies and outliers specific to the target environment.
 This is not a novel approach to threat hunting, but I thought the project was worth sharing, because in certain environments the automation can be a time saver. <br><br>
 User and developer guides can be found on the wiki  <a href="https://github.com/NetSPI/PowerHunt/wiki">here</a>.<Br>
 
@@ -20,6 +21,7 @@ BSD 3-Clause
 Primary Todo
 --
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
+* FEATURE: exclude dc 
 
 
   
