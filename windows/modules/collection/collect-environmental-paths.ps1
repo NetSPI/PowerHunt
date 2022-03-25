@@ -11,6 +11,31 @@
 $Env:Path |
 foreach {
     
-    $_.split(",;")
-    
+    $EnvPath = $_.split(",;")
+    $EnvPath | 
+    Foreach{
+
+        # Verify folder exists
+        $PathExists = Test-Path "$_"
+
+        if($PathExists -eq $true){
+            
+            # Get folder info
+            $FileInfo           =  Get-Item "$_"
+            $FileOwner          =  $FileInfo.GetAccessControl().Owner
+            $FileCreationTime   =  $FileInfo.CreationTime
+            $FileLastWriteTime  =  $FileInfo.LastWriteTime
+            $FileLastAccessTime =  $FileInfo.LastAccessTime
+        }
+
+        # Create new object
+        $Object = New-Object PSObject
+        $Object | add-member EnvPath              $_
+        $Object | add-member PathExists           $PathExists 
+        $Object | add-member FileOwner            $FileOwner 
+        $Object | add-member FileCreationTime     $FileCreationTime 
+        $Object | add-member FileLastWriteTime    $FileLastWriteTime
+        $Object | add-member FileLastAccessTime   $FileLastAccessTime
+        $Object
+    }
 }
