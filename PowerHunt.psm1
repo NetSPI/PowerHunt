@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.35
+# Version: 0.42
 function Invoke-PowerHunt
 {    
  <#
@@ -107,6 +107,17 @@ function Invoke-PowerHunt
     Begin
     {
         
+        # Set target mode
+        $TargetMode = "Active Directory Computers"
+
+        if($ComputerName){
+            $TargetMode = "Single Computer"
+        }
+
+        if($ComputerList){
+            $TargetMode = "Computer List"
+        }
+
         # Set variables
         $Time =  Get-Date -UFormat "%m/%d/%Y %R"
         $GlobalThreadCount = $Threads
@@ -127,7 +138,8 @@ function Invoke-PowerHunt
         Write-Output " ==========================================="
         Write-Output " PowerHunt"
         Write-Output " ==========================================="
-        Write-Output " [+][$Time] Authentication Mode: $AuthMode"
+        Write-Output " [+][$Time] Authentication Mode : $AuthMode"
+        Write-Output " [+][$Time] Computer Target Mode: $TargetMode"        
 
         # Check for CollectOnly mode
         if($CollectOnly){            
@@ -149,8 +161,8 @@ function Invoke-PowerHunt
 
                     # Verify output directory path
                     $FolderDateTime =  Get-Date -Format "MMddyyyyHHmmss"
-                    $OutputDirectory = "$OutputDirectory\Hunt-$FolderDateTime"
-                    Write-Output " [+][$Time] Output Directory: $OutputDirectory"
+                    $OutputDirectory = "$OutputDirectory\Hunt-$FolderDateTime"                    
+                    Write-Output " [+][$Time] Output Directory    : $OutputDirectory"
 
                     # Create sub directories
                     mkdir $OutputDirectory | Out-Null
@@ -262,8 +274,9 @@ function Invoke-PowerHunt
                 Write-Output " TARGET: Single Computer"
                 Write-Output " -------------------------------------------"
                 Write-Output " [+][$Time] - $ComputerName"
-                $DomainComputers = $ComputerName
+                $DomainComputers = $ComputerName | foreach{$object=new-object psobject;$object|add-member ComputerName $_;$object}
                 $ComputerCount = 1
+                $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Single-Computer.csv"
             }
 
             # ----------------------------------------------------------------------
@@ -282,8 +295,9 @@ function Invoke-PowerHunt
                 if(Test-Path $ComputerList){
 
                     # Get computer list
-                    $DomainComputers = gc $ComputerList
-                    $ComputerCount = $DomainController.count
+                    $DomainComputers = gc $ComputerList | foreach{$object=new-object psobject;$object|add-member ComputerName $_;$object}
+                    $ComputerCount = $DomainComputers | measure | select count -ExpandProperty count
+                    $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computer-list.csv"
                     
                 }else{
                     Write-Output " [!][$Time] - Invalid path."
@@ -342,11 +356,11 @@ function Invoke-PowerHunt
                 Write-Output " [+][$Time] - $ComputerCount computers found"
 
                 # Save results
-                # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers.csv"
-                $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers.csv"
-                # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
-                $DomainComputersFile = "Hunt-Domain-Computers.csv"
-                #$DomainComputersFileH = "Hunt-Domain-Computers.html"
+                # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Domain-Computers.csv"
+                $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Domain-Computers.csv"
+                # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\discovery\Hunt-Target-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
+                $DomainComputersFile = "Hunt-Target-Domain-Computers.csv"
+                #$DomainComputersFileH = "Hunt-Target-Domain-Computers.html"
 
                 Write-Output " [+][$Time] Output directory: $OutputDirectory"
             }
@@ -395,11 +409,11 @@ function Invoke-PowerHunt
 
             # Save results
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers-Pingable.csv"
-            $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-Pingable.csv"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Pingable.csv"
+            $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-Pingable.csv"
             #$null = Convert-DataTableToHtmlTable -DataTable $ComputersPingable -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers-Pingable.html" -Title "Domain Computers: Ping Response" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain that responded to ping requests."
-            $ComputersPingableFile = "Hunt-Domain-Computers-Pingable.csv"
-            #$ComputersPingableFileH =  "Hunt-Domain-Computers-Pingable.html"
+            $ComputersPingableFile = "Hunt-Target-Computers-Pingable.csv"
+            #$ComputersPingableFileH =  "Hunt-Target-Computers-Pingable.html"
 
 
             Write-Output " -------------------------------------------"
@@ -456,11 +470,11 @@ function Invoke-PowerHunt
             Write-Output " [+][$Time] - $Computers5985OpenCount computers have TCP port 5985 open."                
 
             # Save results
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers-Open5985.csv"        
-            $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5985.csv"
-            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
-            $Computers5985OpenFile = "Hunt-Domain-Computers-Open5985.csv"
-            #$Computers5985OpenFileH ="Hunt-Domain-Computers-Open5985.html"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Open5985.csv"        
+            $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-Open5985.csv"
+            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\discovery\Hunt-Target-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
+            $Computers5985OpenFile = "Hunt-Target-Computers-Open5985.csv"
+            #$Computers5985OpenFileH ="Hunt-Target-Computers-Open5985.html"
 
             # ----------------------------------------------------------------------
             # Identify computers that have TCP 5986 open and accessible
@@ -511,11 +525,11 @@ function Invoke-PowerHunt
             Write-Output " [+][$Time] - $Computers5986OpenCount computers have TCP port 5986 open."            
 
             # Save results
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Domain-Computers-Open5986.csv"        
-            $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5986.csv"
-            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
-            $Computers5986OpenFile = "Hunt-Domain-Computers-Open5986.csv"
-            #$Computers5986OpenFileH ="Hunt-Domain-Computers-Open5986.html"
+            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Open5986.csv"        
+            $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-Open5986.csv"
+            #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\discovery\Hunt-Target-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
+            $Computers5986OpenFile = "Hunt-Target-Computers-Open5986.csv"
+            #$Computers5986OpenFileH ="Hunt-Target-Computers-Open5986.html"
 
             # ----------------------------------------------------------------------
             # Create PS Remoting Sessions
@@ -536,8 +550,8 @@ function Invoke-PowerHunt
                 # Save results
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 Write-Output " [+][$Time] - $PsRemotingTargetsAllCount computers will be targeted."
-                # Write-Output " [+][$Time] - Saving to $OutputDirectory\discovery\Hunt-Domain-Computers-PsRemoting.csv"        
-                $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Domain-Computers-PsRemoting.csv"        
+                # Write-Output " [+][$Time] - Saving to $OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting.csv"        
+                $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting.csv"        
             }
 
             Write-Output " -------------------------------------------"
