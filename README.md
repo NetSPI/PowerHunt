@@ -20,10 +20,11 @@ BSD 3-Clause
 Primary Todo
 --
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
-Add collection modules
-* Registered antivirus (via WMI) - baselining -  look for outliers
-* LocalGPOs - evil gpo - look for outliers
-* WindowsFirewall - check if disabled
+* add security products
+Get-WmiObject -Namespace ROOT/SecurityCenter2 -Class AntiSpywareProduct
+Get-WmiObject -Namespace ROOT/SecurityCenter2 -Class AntiVirusProduct 
+Get-WmiObject -Namespace ROOT/SecurityCenter2 -Class FirewallProduct
+
 
   
 
