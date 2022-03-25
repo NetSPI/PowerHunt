@@ -26,6 +26,7 @@ Primary Todo
 * add mitreid and description field to all collection/analysis modules
 * HTML report; add summary data to collected and analysis pages
 * HTML report; link collect on analysis to collect page; consider expanda able chart by data source=counts (stacked summary),top anomalies,top bad artifacts
+* consider mini card by data source with green, orange, red - include computer, anomaly, and bad artifacts count
 
 
   
