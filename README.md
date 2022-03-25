@@ -23,7 +23,6 @@ Primary Todo
 Add collection modules
 * Registered antivirus (via WMI) - baselining -  look for outliers
 * LocalGPOs - evil gpo - look for outliers
-* NetworkProfiles - look for dual homed
 * WindowsFirewall - check if disabled
 
   
