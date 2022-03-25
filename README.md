@@ -29,6 +29,7 @@ Primary Todo
 * consider mini card by data source with green, orange, red - include computer, anomaly, and bad artifacts count - expandable with details?
 * donut for anomalies by data source + affected system count card + full list of analyssi modules breakdown with link to raw data in csv / html 
 * donut for bad artifacts by data source + affected system count card + full list of analyssi modules breakdown with link to raw data in csv / html 
+* consider breaking out two type of analyusis module - group (frequency analysis) and searching (keyword or known bad x)
 
 
   
