@@ -24,6 +24,8 @@ Primary Todo
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * FEATURE: exclude dc 
 * add mitreid and description field to all collection/analysis modules
+* HTML report; add summary data to collected and analysis pages
+* HTML report; link collect on analysis to collect page;
 
 
   
