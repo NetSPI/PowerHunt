@@ -27,6 +27,8 @@ Primary Todo
 * HTML report; add summary data to collected and analysis pages
 * HTML report; link collect on analysis to collect page; consider expanda able chart by data source=counts (stacked summary),top anomalies,top bad artifacts
 * consider mini card by data source with green, orange, red - include computer, anomaly, and bad artifacts count - expandable with details?
+* donut for anomalies by data source + affected system count card + full list of analyssi modules breakdown with link to raw data in csv / html 
+* donut for bad artifacts by data source + affected system count card + full list of analyssi modules breakdown with link to raw data in csv / html 
 
 
   
