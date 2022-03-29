@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.45
+# Version: 0.47
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -29,7 +29,9 @@ function Invoke-PowerHunt
             .PARAMETER ComputerName
             Target single system, Active Directory discovery is disabled when using this method.
             .PARAMETER ComputerList
-            Target list of computers with this file path, Active Directory discovery is disabled when using this method.	    
+            Target list of computers with this file path, Active Directory discovery is disabled when using this method.
+            .PARAMETER ShowSummary
+            Display a table containing a summary for each module.            	    
             .EXAMPLE
             PS C:\> Invoke-PowerHunt -OutputDirectory "c:\temp" -Threads 100
             .EXAMPLE
@@ -100,7 +102,11 @@ function Invoke-PowerHunt
 
         [Parameter(Mandatory = $false,
         HelpMessage = 'Target a list of computers. This will disable LDAP discovery.')]
-        [string]$ComputerList
+        [string]$ComputerList,
+
+        [Parameter(Mandatory = $false,
+        HelpMessage = 'Display a table containing a summary for each module. ')]
+        [switch] $ShowSummary
         
     )
 	
@@ -108,6 +114,13 @@ function Invoke-PowerHunt
     Begin
     {
         
+        # Create data table to store module summary data
+        $ModuleOutputSummary = New-Object System.Data.DataTable
+        $null = $ModuleOutputSummary.Columns.Add("Name")
+        $null = $ModuleOutputSummary.Columns.Add("ModuleType")
+        $null = $ModuleOutputSummary.Columns.Add("AnalysisType")
+        $null = $ModuleOutputSummary.Columns.Add("InstanceCount")
+
         # Set target mode
         $TargetMode = "Active Directory Computers"
 
@@ -139,6 +152,8 @@ function Invoke-PowerHunt
         Write-Output " ==========================================="
         Write-Output " PowerHunt"
         Write-Output " ==========================================="
+        Write-Output " Author: Scott Sutherland, NetSPI"
+        Write-Output " -------------------------------------------"
         Write-Output " [+][$Time] Authentication Mode : $AuthMode"
         Write-Output " [+][$Time] Computer Target Mode: $TargetMode"        
 
@@ -608,8 +623,12 @@ function Invoke-PowerHunt
                 $ModuleFilePath = $_.fullname    
 
                 # Parse module name from file
-                $ModuleName= $_.name -replace(".ps1","")
+                $ModuleName = $_.name -replace(".ps1","")
                 $ModuleStartTime = Get-Date
+
+                # Set module fields
+                $ModuleType = "Collection"
+                $AnalysisType = "NA"  
 
                 # Run module
                 Write-Output " [+][$Time] - `($CurrentModulesCount of $CollectionModulesCount`) $ModuleName"
@@ -719,7 +738,11 @@ function Invoke-PowerHunt
                     $AnalysisModuleName = $_.name -replace(".ps1","")   
 
                     # Analysis subdirectory
-                    $AnalysisSubDir  = 'suspiciousartifacts\'                                  
+                    $AnalysisSubDir  = 'suspiciousartifacts\' 
+
+                    # Set module fields
+                    $ModuleType = "Analysis"
+                    $AnalysisType = "Suspicious Artifact"                                                     
 
                     # Load and run analysis module
                     $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
@@ -769,6 +792,10 @@ function Invoke-PowerHunt
                     # Analysis subdirectory
                     $AnalysisSubDir  = 'anomalies\'
 
+                    # Set module fields
+                    $ModuleType = "Analysis"
+                    $AnalysisType = "Suspicious Artifact"
+
                     # Load and run analysis module
                     $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
                     Write-Output " [+][$Time]   - `($AnalysisModulesCountP of $AnalysisModulesCountT`) $AnalysisModuleName"           
@@ -777,7 +804,8 @@ function Invoke-PowerHunt
                     $AnalysisCommand = Get-Content $AnalysisModuleFilePath -Raw
 
                     # Run module code
-                    Invoke-Expression $AnalysisCommand                
+                    Invoke-Expression $AnalysisCommand 
+                                                       
                 }    
             } 
 
@@ -785,6 +813,21 @@ function Invoke-PowerHunt
             Write-Output " REPORTING: RUN ALL MODULES"
             Write-Output " -------------------------------------------"
             Write-Output " - HTML `(pending`)"
+            
+            # $ModuleOutputSummary
+            $ModuleOutputSummary
+            
+            # Calculate Summary: Computers
+            
+            # Calculate Summary: Collection Modules
+            
+            # Calculate Summary: Analysis Modules
+            
+            # Calculate Summary: Suspicous Artifacts
+            
+            # Calculate Summary: Anomalies
+            
+            # Generate HTML summary report
         }
 
         # Shutdown active sessions if not offline mode / analysis only
@@ -810,6 +853,7 @@ function Invoke-PowerHunt
         }
      }
 }
+
 
 # -------------------------------------------
 # Function: Get-LdapQuery
@@ -1693,6 +1737,7 @@ function Invoke-Parallel
         }
     }
 }
+
 
 # -------------------------------------------
 # Function: Invoke-Ping
