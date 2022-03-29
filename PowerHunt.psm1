@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.43
+# Version: 0.44
 function Invoke-PowerHunt
 {    
  <#
@@ -204,10 +204,11 @@ function Invoke-PowerHunt
             if ((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq $false){
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 Write-Output " [x][$Time] This is not a privileged processed, aborting operation."
-                Write-Output " [!][$Time] Make sure to run this in a privileged process that can run the commands:"
-                Write-Output "    [$Time]  Enable-PSRemoting force"
-                Write-Output "    [$Time]  Set-Service WinRM StartMode Automatic"
-                Write-Output "    [$Time]  Set-Item WSMan:localhost\client\trustedhosts -value *"
+                Write-Output " [!][$Time] Make sure to run this in a privileged process."
+                Write-Output " [*][$Time] Below are the command to configure PS Remoting:"
+                Write-Output " [*][$Time]  Enable-PSRemoting force"
+                Write-Output " [*][$Time]  Set-Service WinRM StartMode Automatic"
+                Write-Output " [*][$Time]  Set-Item WSMan:localhost\client\trustedhosts -value *"
                 break
             }else{
 
