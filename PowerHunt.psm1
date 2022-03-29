@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.48
+# Version: 0.50
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -116,7 +116,8 @@ function Invoke-PowerHunt
         
         # Create data table to store module summary data
         $ModuleOutputSummary = New-Object System.Data.DataTable
-        $null = $ModuleOutputSummary.Columns.Add("Name")
+        $null = $ModuleOutputSummary.Columns.Add("CollectModule")
+        $null = $ModuleOutputSummary.Columns.Add("AnalyzeModule")
         $null = $ModuleOutputSummary.Columns.Add("ModuleType")
         $null = $ModuleOutputSummary.Columns.Add("AnalysisType")
         $null = $ModuleOutputSummary.Columns.Add("InstanceCount")
@@ -623,12 +624,8 @@ function Invoke-PowerHunt
                 $ModuleFilePath = $_.fullname    
 
                 # Parse module name from file
-                $ModuleName = $_.name -replace(".ps1","")
+                $ModuleName= $_.name -replace(".ps1","")
                 $ModuleStartTime = Get-Date
-
-                # Set module fields
-                $ModuleType = "Collection"
-                $AnalysisType = "NA"  
 
                 # Run module
                 Write-Output " [+][$Time] - `($CurrentModulesCount of $CollectionModulesCount`) $ModuleName"
