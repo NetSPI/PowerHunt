@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.50
+# Version: 0.51
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -116,10 +116,11 @@ function Invoke-PowerHunt
         
         # Create data table to store module summary data
         $ModuleOutputSummary = New-Object System.Data.DataTable
-        $null = $ModuleOutputSummary.Columns.Add("CollectModule")
-        $null = $ModuleOutputSummary.Columns.Add("AnalyzeModule")
         $null = $ModuleOutputSummary.Columns.Add("ModuleType")
-        $null = $ModuleOutputSummary.Columns.Add("AnalysisType")
+        $null = $ModuleOutputSummary.Columns.Add("CollectModule")
+        $null = $ModuleOutputSummary.Columns.Add("CollectSource")
+        $null = $ModuleOutputSummary.Columns.Add("AnalyzeModule")        
+        $null = $ModuleOutputSummary.Columns.Add("FindingType")
         $null = $ModuleOutputSummary.Columns.Add("InstanceCount")
 
         # Set target mode
@@ -690,6 +691,7 @@ function Invoke-PowerHunt
    
                 # Parse module name from file
                 $CollectionDataSource = $_.name -replace(".ps1","") -replace("collect-","")
+                $CollectionModuleName = $_.name -replace(".ps1","")
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 Write-Output " [+][$Time] Data Source `($CollectionModulesCountP of $CollectionModulesCount`): $CollectionDataSource"
             
