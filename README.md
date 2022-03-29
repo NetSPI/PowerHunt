@@ -23,8 +23,7 @@ Primary Todo
 --
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * FEATURE: exclude dc 
-* name match bug - namely users; 
-* fix collection counts
+* name match bug - namely users - dup runs;
 
 
   
