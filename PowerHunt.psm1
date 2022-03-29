@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.51
+# Version: 0.52
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -632,7 +632,7 @@ function Invoke-PowerHunt
                 Write-Output " [+][$Time] - `($CurrentModulesCount of $CollectionModulesCount`) $ModuleName"
 
                 $MyCommand = Get-Content $_.fullname -Raw
-                $Results = Invoke-Command -Session (Get-PSSession | where state -like "Opened") -ScriptBlock {Invoke-Expression -Command  "$args"} -ArgumentList $MyCommand -ErrorAction SilentlyContinue
+                $Results = Invoke-Command -Session (Get-PSSession | where state -like "Opened") -ScriptBlock {Invoke-Expression -Command  "$args"} -ArgumentList $MyCommand -ErrorAction SilentlyContinue                
                 $ModuleStopTime = Get-Date
                 $ModuleDuration = $ModuleStopTime - $ModuleStartTime
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
@@ -640,8 +640,13 @@ function Invoke-PowerHunt
                 # Save output
                 $FileName = $_.name -replace(".ps1",".csv")
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                # Write-Output " [+][$Time] - Saving to $OutputDirectory\collection\Hunt-$FileName"
                 $Results | Export-Csv -NoTypeInformation "$OutputDirectory\collection\Hunt-$FileName"
+
+                # Get instance count
+                $ResultsCount = $Results | measure |select count -ExpandProperty count
+                
+                # Save summary metrics
+                $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","NA","NA","NA","$ResultsCount")
             }
         }
 
