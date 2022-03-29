@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.47
+# Version: 0.48
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -794,7 +794,7 @@ function Invoke-PowerHunt
 
                     # Set module fields
                     $ModuleType = "Analysis"
-                    $AnalysisType = "Suspicious Artifact"
+                    $AnalysisType = "Anomaly"
 
                     # Load and run analysis module
                     $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
@@ -812,10 +812,7 @@ function Invoke-PowerHunt
             Write-Output " -------------------------------------------"
             Write-Output " REPORTING: RUN ALL MODULES"
             Write-Output " -------------------------------------------"
-            Write-Output " - HTML `(pending`)"
-            
-            # $ModuleOutputSummary
-            $ModuleOutputSummary
+            Write-Output " - HTML `(pending`)"            
             
             # Calculate Summary: Computers
             
@@ -850,6 +847,11 @@ function Invoke-PowerHunt
             $StopTime = Get-Date
             $ScanDuration = $StopTime - $StartTime        
             Write-Output " [+][$Time]  - Test duration: $ScanDuration"
+        }
+
+        # Show $ModuleOutputSummary
+        if($ShowSummary -and $ModuleOutputSummary){                        
+            $ModuleOutputSummary
         }
      }
 }
