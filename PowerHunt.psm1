@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.55
+# Version: 0.58
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -122,6 +122,7 @@ function Invoke-PowerHunt
         $null = $ModuleOutputSummary.Columns.Add("AnalyzeModule")        
         $null = $ModuleOutputSummary.Columns.Add("FindingType")
         $null = $ModuleOutputSummary.Columns.Add("InstanceCount")
+        $null = $ModuleOutputSummary.Columns.Add("ComputerCount") # Computers with 1 or more instances
 
         # Set target mode
         $TargetMode = "Active Directory Computers"
@@ -383,7 +384,7 @@ function Invoke-PowerHunt
                 $DomainComputersFile = "Hunt-Target-Domain-Computers.csv"
                 #$DomainComputersFileH = "Hunt-Target-Domain-Computers.html"
 
-                Write-Output " [+][$Time] Output directory: $OutputDirectory"
+                #Write-Output " [+][$Time] Output directory: $OutputDirectory"
             }
 
             # ----------------------------------------------------------------------
@@ -646,18 +647,15 @@ function Invoke-PowerHunt
                 # Get instance count
                 $ResultsCount = $Results | measure |select count -ExpandProperty count
 
-                # Computer count
-                <#
+                # Computer count                
                 if($ResultsCount -eq 0){
                     $CollectModuleAffectedComputerCount = 0
                 }else{                    
-                    $CollectModuleAffectedComputerCount = $Results | select PSComputerName -Unique | measure | select count -ExpandProperty count
-                    $CollectModuleAffectedComputerCount
+                    $CollectModuleAffectedComputerCount = $Results | select PSComputerName -Unique | measure | select count -ExpandProperty count                    
                 }
-                #>
 
                 # Save summary metrics
-                $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","NA","NA","NA","$ResultsCount")
+                $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","NA","NA","NA","$ResultsCount","$CollectModuleAffectedComputerCount")
             }
         }
 
