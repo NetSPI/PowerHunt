@@ -23,6 +23,7 @@ Primary Todo
 --
 * FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * add html page generation and link to report
+* figure out where to define the module description
 * exclude dcs swith
 
 
