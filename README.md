@@ -27,7 +27,7 @@ Primary Todo
   
 **Features**
 * **find method to get affected computer counts by subsection**
-* **figure out where to define the module description**  
+* **figure out where to define the module description**  - analysis in module+add to sumtable; collect=?
 * Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * add html page generation and link to report - function ready/added, just need to add lines for file generation
 * configure default anomaly threshold - %/count deviation 
