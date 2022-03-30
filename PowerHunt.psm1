@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.54
+# Version: 0.55
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -553,7 +553,7 @@ function Invoke-PowerHunt
             #$Computers5986OpenFileH ="Hunt-Target-Computers-Open5986.html"
 
             # ----------------------------------------------------------------------
-            # Create PS Remoting Sessions
+            # Identify PS Remoting Targets
             # ---------------------------------------------------------------------- 
             # Add percentage that likley support ps remoting
             if($Computers5986OpenCount -eq 0 -and $Computers5985OpenCount -eq 0){
@@ -572,7 +572,7 @@ function Invoke-PowerHunt
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 Write-Output " [+][$Time] - $PsRemotingTargetsAllCount computers will be targeted."
                 # Write-Output " [+][$Time] - Saving to $OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting.csv"        
-                $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting.csv"        
+                $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting-Targets.csv"        
             }
 
             Write-Output " -------------------------------------------"
@@ -593,7 +593,8 @@ function Invoke-PowerHunt
                 }
             }
 
-            $SessionCount = (Get-PSSession | where State -like 'Opened').count
+            $SessionCount = (Get-PSSession | where State -like "*Opened*").count
+            Get-PSSession | where State -like "*Opened*" | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting-Sessions.csv"        
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             Write-Output " [+][$Time] - $SessionCount PS Remoting sessions were established."
             if($SessionCount -eq 0){          
@@ -644,7 +645,17 @@ function Invoke-PowerHunt
 
                 # Get instance count
                 $ResultsCount = $Results | measure |select count -ExpandProperty count
-                
+
+                # Computer count
+                <#
+                if($ResultsCount -eq 0){
+                    $CollectModuleAffectedComputerCount = 0
+                }else{                    
+                    $CollectModuleAffectedComputerCount = $Results | select PSComputerName -Unique | measure | select count -ExpandProperty count
+                    $CollectModuleAffectedComputerCount
+                }
+                #>
+
                 # Save summary metrics
                 $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","NA","NA","NA","$ResultsCount")
             }
