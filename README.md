@@ -25,6 +25,7 @@ Primary Todo
 * add html page generation and link to report
 * figure out where to define the module description
 * add rdp, ps remoting, generic netsess collection modules
+* heat map in html report?
 * exclude dcs swith
 
 
