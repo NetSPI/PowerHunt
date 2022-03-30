@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.53
+# Version: 0.54
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -817,43 +817,63 @@ function Invoke-PowerHunt
             Write-Output " REPORTING: RUN ALL MODULES"
             Write-Output " -------------------------------------------"
             Write-Output " - HTML `(pending`)"            
-            
+            <#
             # Calculate Summary: Computers
             
-                # Total computers provided
-                # Total computers with ping + %
-                # Total computers with open ports + %
-                # Total computers with active session + %
-                # Total computers with one or more suspicious artifacts or anomalies + % of provided
+                $ComputerCount
+                $ComputerPingableCount
+                $Computers5986OpenCount
+                $Computers5985OpenCount
+                $SessionCount
                 # Total computers with one or more anomalies + %
                 # Total computers with one or more suspicious artifacts + %
             
             # Calculate Summary: Collection Modules
 
                 # Total number of modules
+                $CollectionModulesCount
+
                 # Total number of modules with one or more suspicious artifacts or anomalies + % of provided
-                # Then filter $ModuleOutputSummary for table
+                $CollectModuleWithFindingsAll     = $ModuleOutputSummary | where ModuleType -eq "Collection" 
+                $CollectModuleWithFindings        = $ModuleOutputSummary | where ModuleType -eq "Collection" | Where InstanceCount -GT 0
+                $CollectModuleWithFindingsCount   = $CollectModuleWithFindings | measure | select count -ExpandProperty count
             
             # Calculate Summary: Analysis Modules
 
                 # Total number of modules
+                $AnalysisModulesCount
+
                 # Total number of modules with one or more suspicious artifacts or anomalies + % of provided
-                # Then filter $ModuleOutputSummary for table
+                $AnalysisModuleWithFindingsAll     = $ModuleOutputSummary | where ModuleType -eq "Analysis" 
+                $AnalysisModuleWithFindings        = $ModuleOutputSummary | where ModuleType -eq "Analysis" | Where InstanceCount -GT 0
+                $AnalysisModuleWithFindingsCount   = $AnalysisModuleWithFindings | measure | select count -ExpandProperty count                
             
             # Calculate Summary: Suspicous Artifacts
-                
-                # Total number of computers with one or more suspicious artifacts % of provided
-                # Total number of collect modules with one or more suspicious artifacts % of provided
-                # Total number of anayssis modules with one or more suspicious artifacts % of provided
-                # Then filter $ModuleOutputSummary for table
+
+                # Get affected
+                $SusArtModuleWithFindingsAll       = $ModuleOutputSummary | where FindingType -eq "Suspicious Artifact" 
+                $SusArtModuleWithFindings          = $SusArtModuleWithFindingsAll | Where InstanceCount -GT 0
+
+                $SusArtAffectedCollectModules      = $SusArtModuleWithFindings | select CollectModule -Unique 
+                $SusArtAffectedCollectModulesCount = $SusArtAffectedCollectModules | measure | select count -ExpandProperty count
+
+                $SusArtAffectedAnalyzeModules      = $SusArtModuleWithFindings | select AnalyzeModule -Unique 
+                $SusArtAffectedAnalyzeModulesCount = $SusArtAffectedAnalyzeModules | measure | select count -ExpandProperty count                                
             
             # Calculate Summary: Anomalies
 
-                # Total number of computers with one or more suspicious anomalies % of provided
-                # Total number of collect modules with one or more suspicious anomalies % of provided
-                # Total number of anayssis modules with one or more suspicious anomalies % of provided
-                # Then filter $ModuleOutputSummary for table
+                # Get affected
+                $AnomalyModuleWithFindingsAll       = $ModuleOutputSummary | where FindingType -eq "Anomaly" 
+                $AnomalyModuleWithFindings          = $AnomalyModuleWithFindingsAll | Where InstanceCount -GT 0
+
+                $SusArtAffectedCollectModules      = $AnomalyModuleWithFindings | select CollectModule -Unique 
+                $SusArtAffectedCollectModulesCount = $SusArtAffectedCollectModules | measure | select count -ExpandProperty count
+
+                $SusArtAffectedAnalyzeModules      = $AnomalyModuleWithFindings | select AnalyzeModule -Unique 
+                $SusArtAffectedAnalyzeModulesCount = $SusArtAffectedAnalyzeModules | measure | select count -ExpandProperty count
             
+            #>
+
             # Generate HTML summary report
         }
 
