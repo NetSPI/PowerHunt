@@ -27,6 +27,7 @@ Primary Todo
 * add rdp, ps remoting, generic netsess collection modules
 * heat map in html report?
 * fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
+* fix cast error in field for wmi bindings modules
 * exclude dcs swith
 
 
