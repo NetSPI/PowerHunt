@@ -21,15 +21,19 @@ BSD 3-Clause
 
 Primary Todo
 --
-* FEATURE: Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
+**Fixes**
+* fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
+* FIX cast error in field for wmi bindings modules
+  
+**Features**
+* Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * add html page generation and link to report
+* configure default anomaly threshold - %/count deviation
+* find method to get affected computer counts by subsection   
 * figure out where to define the module description
 * add rdp, ps remoting, generic netsess collection modules
-* heat map in html report?
-* fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
-* fix cast error in field for wmi bindings modules
-* configure default anomaly threshold - %/count deviation
 * exclude dcs swith
+* heat map in html report?
 
 
   
