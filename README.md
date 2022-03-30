@@ -26,7 +26,7 @@ Primary Todo
 * figure out where to define the module description
 * add rdp, ps remoting, generic netsess collection modules
 * heat map in html report?
-* fix groups collection on 2008 ps3 vs ps5
+* fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
 * exclude dcs swith
 
 
