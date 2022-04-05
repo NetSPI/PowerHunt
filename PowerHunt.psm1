@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.59
+# Version: 0.60
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -907,6 +907,9 @@ function Invoke-PowerHunt
             $ScanDuration = $StopTime - $StartTime        
             Write-Output " [*][$Time]  - Test duration: $ScanDuration"
         }
+
+        # Save summary data to file
+        $ModuleOutputSummary | Export-Csv -NoTypeInformation "$OutputDirectory\Hunt-Module-Summaries.csv"
 
         # Show $ModuleOutputSummary
         if($ShowSummary -and $ModuleOutputSummary){                        
