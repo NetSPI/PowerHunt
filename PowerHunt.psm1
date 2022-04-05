@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.58
+# Version: 0.59
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -157,17 +157,17 @@ function Invoke-PowerHunt
         Write-Output " ==========================================="
         Write-Output " Author: Scott Sutherland, NetSPI"
         Write-Output " -------------------------------------------"
-        Write-Output " [+][$Time] Authentication Mode : $AuthMode"
-        Write-Output " [+][$Time] Computer Target Mode: $TargetMode"        
+        Write-Output " [*][$Time] Authentication Mode : $AuthMode"
+        Write-Output " [*][$Time] Computer Target Mode: $TargetMode"        
 
         # Check for CollectOnly mode
         if($CollectOnly){            
-            Write-Output " [+][$Time] COLLECT ONLY MODE"
+            Write-Output " [*][$Time] COLLECT ONLY MODE"
         }
 
         # Check for AnalyzeOnly mode
         if($AnalyzeOnly){
-            Write-Output " [+][$Time] ANALYZE ONLY MODE"
+            Write-Output " [*][$Time] ANALYZE ONLY MODE"
         }
 
         # Create output directory
@@ -181,7 +181,7 @@ function Invoke-PowerHunt
                     # Verify output directory path
                     $FolderDateTime =  Get-Date -Format "MMddyyyyHHmmss"
                     $OutputDirectory = "$OutputDirectory\Hunt-$FolderDateTime"                    
-                    Write-Output " [+][$Time] Output Directory    : $OutputDirectory"
+                    Write-Output " [*][$Time] Output Directory    : $OutputDirectory"
 
                     # Create sub directories
                     mkdir $OutputDirectory | Out-Null
@@ -204,7 +204,7 @@ function Invoke-PowerHunt
             # Check for modules direcroty 
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             if(Test-Path .\windows\modules){
-             # Write-Output " [+][$Time] The windows\modules directory was found."
+             # Write-Output " [*][$Time] The windows\modules directory was found."
         }else{
              Write-Output " [x][$Time] The windows\modules directory was not found."
              Write-Output " [!][$Time] Aborting operation."
@@ -214,7 +214,7 @@ function Invoke-PowerHunt
             # Get start time
             $StartTime = Get-Date
 	        $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] Start active testing"        
+            Write-Output " [*][$Time] Start active testing"        
             $StopWatch =  [system.diagnostics.stopwatch]::StartNew()
 
             Write-Output " -------------------------------------------"
@@ -234,20 +234,20 @@ function Invoke-PowerHunt
             }else{
 
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                Write-Output " [+][$Time] Confirmed local administrative privileges."  
-                Write-Output " [+][$Time] Checking if PS Remoting is enabled..."
+                Write-Output " [*][$Time] Confirmed local administrative privileges."  
+                Write-Output " [*][$Time] Checking if PS Remoting is enabled..."
             
                 # Check if ps remoting is enabled
                 try{
 
                     # Test connection
                     Test-WSMan -ComputerName $env:COMPUTERNAME | Out-Null
-                    Write-Output " [+][$Time] PS Remoting appears to be enabled."
+                    Write-Output " [*][$Time] PS Remoting appears to be enabled."
                 }catch{
 
                     # Enable ps remoting
                     Write-Output " [x][$Time] PSRemoting appears to be disabled."
-                    Write-Output " [+][$Time] Enabling PSRemoting..."
+                    Write-Output " [*][$Time] Enabling PSRemoting..."
                 
                     #Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private -ErrorAction SilentlyContinue
                     Enable-PSRemoting -Force -SkipNetworkProfileCheck -ErrorAction SilentlyContinue -WarningAction SilentlyContinue | Out-Null
@@ -258,10 +258,10 @@ function Invoke-PowerHunt
                
                 # Trust all hosts
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                # Write-Output " [+][$Time] Trust configuration check..." 
+                # Write-Output " [*][$Time] Trust configuration check..." 
                 try{           
                     Set-Item WSMan:localhost\client\trustedhosts -value * -Force -ErrorAction SilentlyContinue | Out-Null
-                    # Write-Output " [+][$Time] Trust configuration updated successfully."
+                    # Write-Output " [*][$Time] Trust configuration updated successfully."
                 }catch{
                     Write-Output " [x][$Time] Trust configuration update failed."
                     Write-Output " [!][$Time] Aborting operation."
@@ -277,7 +277,7 @@ function Invoke-PowerHunt
                 # One last configuration check
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
                 if($ServiceStatus.State -eq "Running" -and $TrustStatus.Value -eq '*'){
-                    Write-Output " [+][$Time] Local PowerShell Remoting requirements met."
+                    Write-Output " [*][$Time] Local PowerShell Remoting requirements met."
                 }else{
                     Write-Output " [x][$Time] Enabling PowerShell Remoting failed."
                     Write-Output " [!][$Time] Aborting operation."
@@ -295,7 +295,7 @@ function Invoke-PowerHunt
                 Write-Output " -------------------------------------------"
                 Write-Output " TARGET: Single Computer"
                 Write-Output " -------------------------------------------"
-                Write-Output " [+][$Time] - $ComputerName"
+                Write-Output " [*][$Time] - $ComputerName"
                 $DomainComputers = $ComputerName | foreach{$object=new-object psobject;$object|add-member ComputerName $_;$object}
                 $ComputerCount = 1
                 $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Single-Computer.csv"
@@ -311,7 +311,7 @@ function Invoke-PowerHunt
                 Write-Output " -------------------------------------------"
                 Write-Output " TARGET: Computer List"
                 Write-Output " -------------------------------------------"
-                Write-Output " [+][$Time] - $ComputerList"
+                Write-Output " [*][$Time] - $ComputerList"
                 
                 # Test computer list path
                 if(Test-Path $ComputerList){
@@ -341,7 +341,7 @@ function Invoke-PowerHunt
                 Write-Output " -------------------------------------------"       
 
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                Write-Output " [+][$Time] Attempting to access domain controller..."          
+                Write-Output " [*][$Time] Attempting to access domain controller..."          
                 $DCRecord = Get-LdapQuery -LdapFilter "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))" -DomainController $DomainController -Credential $Credential | select -first 1 | select properties -expand properties -ErrorAction SilentlyContinue
                 [string]$DCHostname = $DCRecord.dnshostname
                 [string]$DCCn = $DCRecord.cn
@@ -350,7 +350,7 @@ function Invoke-PowerHunt
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"        
                 if($DCHostname)
                 {
-                    Write-Output " [+][$Time] Successful connection to domain controller: $DCHostname"             
+                    Write-Output " [*][$Time] Successful connection to domain controller: $DCHostname"             
                 }else{
                     Write-Output " [x][$Time] There appears to have been an error connecting to the domain controller."
                     Write-Output " [!][$Time] Aborting."
@@ -358,7 +358,7 @@ function Invoke-PowerHunt
                 }                           
 
                 # Status user
-                Write-Output " [+][$Time] Performing LDAP query for computers associated with the $TargetDomain domain"
+                Write-Output " [*][$Time] Performing LDAP query for computers associated with the $TargetDomain domain"
 
                 # Get domain computers        
                 $DomainComputersRecord = Get-LdapQuery -LdapFilter "(objectCategory=Computer)" -DomainController $DomainController -Credential $Credential
@@ -375,16 +375,16 @@ function Invoke-PowerHunt
 
                 # Status user
                 $ComputerCount = $DomainComputers.count
-                Write-Output " [+][$Time] - $ComputerCount computers found"
+                Write-Output " [*][$Time] - $ComputerCount computers found"
 
                 # Save results
-                # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Domain-Computers.csv"
+                # Write-Output " [*][$Time] - Saving to $OutputDirectory\Hunt-Target-Domain-Computers.csv"
                 $DomainComputers | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Domain-Computers.csv"
                 # $null = Convert-DataTableToHtmlTable -DataTable $DomainComputers -Outfile "$OutputDirectory\discovery\Hunt-Target-Domain-Computers.html" -Title "Domain Computers" -Description "This page shows the domain computers discovered for the $TargetDomain Active Directory domain."
                 $DomainComputersFile = "Hunt-Target-Domain-Computers.csv"
                 #$DomainComputersFileH = "Hunt-Target-Domain-Computers.html"
 
-                #Write-Output " [+][$Time] Output directory: $OutputDirectory"
+                #Write-Output " [*][$Time] Output directory: $OutputDirectory"
             }
 
             # ----------------------------------------------------------------------
@@ -397,7 +397,7 @@ function Invoke-PowerHunt
 
             # Status user
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] Pinging $ComputerCount computers"
+            Write-Output " [*][$Time] Pinging $ComputerCount computers"
 
             # Ping computerss
             $PingResults = $DomainComputers | Invoke-Ping -Throttle $GlobalThreadCount
@@ -419,7 +419,7 @@ function Invoke-PowerHunt
             # Status user
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             $ComputerPingableCount = $ComputersPingable | measure | select count -expandproperty count
-            Write-Output " [+][$Time] - $ComputerPingableCount computers responded to ping requests."
+            Write-Output " [*][$Time] - $ComputerPingableCount computers responded to ping requests."
         
             # Stop if no hosts are accessible
             If ($ComputerPingableCount -eq 0)
@@ -431,7 +431,7 @@ function Invoke-PowerHunt
 
             # Save results
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Pingable.csv"
+            # Write-Output " [*][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Pingable.csv"
             $ComputersPingable | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-Pingable.csv"
             #$null = Convert-DataTableToHtmlTable -DataTable $ComputersPingable -Outfile "$OutputDirectory\discovery\Hunt-Domain-Computers-Pingable.html" -Title "Domain Computers: Ping Response" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain that responded to ping requests."
             $ComputersPingableFile = "Hunt-Target-Computers-Pingable.csv"
@@ -449,7 +449,7 @@ function Invoke-PowerHunt
 
             # Status user
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] Checking if TCP Port 5985 (NonSSL) is open on $ComputerPingableCount computers"
+            Write-Output " [*][$Time] Checking if TCP Port 5985 (NonSSL) is open on $ComputerPingableCount computers"
 
             # Get clean list of pingable computers
             $ComputersPingableClean = $ComputersPingable | Select-Object ComputerName
@@ -489,10 +489,10 @@ function Invoke-PowerHunt
             # Status user
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
             $Computers5985OpenCount = $Computers5985Open | measure | select count -ExpandProperty count
-            Write-Output " [+][$Time] - $Computers5985OpenCount computers have TCP port 5985 open."                
+            Write-Output " [*][$Time] - $Computers5985OpenCount computers have TCP port 5985 open."                
 
             # Save results
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Open5985.csv"        
+            # Write-Output " [*][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Open5985.csv"        
             $Computers5985Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-Open5985.csv"
             #$null = Convert-DataTableToHtmlTable -DataTable $Computers5985Open -Outfile "$OutputDirectory\discovery\Hunt-Target-Computers-Open5985.html" -Title "Domain Computers: Port 5985 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5985 open."
             $Computers5985OpenFile = "Hunt-Target-Computers-Open5985.csv"
@@ -504,7 +504,7 @@ function Invoke-PowerHunt
 
             # Status user
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] Checking if TCP Port 5986 (SSL) is open on $ComputerPingableCount computers"
+            Write-Output " [*][$Time] Checking if TCP Port 5986 (SSL) is open on $ComputerPingableCount computers"
 
             # Get clean list of pingable computers
             $ComputersPingableClean = $ComputersPingable | Select-Object ComputerName
@@ -544,10 +544,10 @@ function Invoke-PowerHunt
             # Status user
             $Computers5986OpenCount = $Computers5986Open | measure | select count -ExpandProperty count
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] - $Computers5986OpenCount computers have TCP port 5986 open."            
+            Write-Output " [*][$Time] - $Computers5986OpenCount computers have TCP port 5986 open."            
 
             # Save results
-            # Write-Output " [+][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Open5986.csv"        
+            # Write-Output " [*][$Time] - Saving to $OutputDirectory\Hunt-Target-Computers-Open5986.csv"        
             $Computers5986Open | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-Open5986.csv"
             #$null = Convert-DataTableToHtmlTable -DataTable $Computers5986Open -Outfile "$OutputDirectory\discovery\Hunt-Target-Computers-Open5986.html" -Title "Domain Computers: Port 5986 Open" -Description "This page shows the domain computers for the $TargetDomain Active Directory domain with port 5986 open."
             $Computers5986OpenFile = "Hunt-Target-Computers-Open5986.csv"
@@ -564,22 +564,22 @@ function Invoke-PowerHunt
             }else{
 
                 # Combine host lists
-                Write-Output " [+][$Time] Creating PS Remoting Target List."
+                Write-Output " [*][$Time] Creating PS Remoting Target List."
                 $PsRemotingTargetsAll = $Computers5986Open + $Computers5985Open
                 $PsRemotingTargetsAll = $PsRemotingTargetsAll | select computername -Unique
                 $PsRemotingTargetsAllCount = $PsRemotingTargetsAll | measure | select count -ExpandProperty count
                         
                 # Save results
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                Write-Output " [+][$Time] - $PsRemotingTargetsAllCount computers will be targeted."
-                # Write-Output " [+][$Time] - Saving to $OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting.csv"        
+                Write-Output " [*][$Time] - $PsRemotingTargetsAllCount computers will be targeted."
+                # Write-Output " [*][$Time] - Saving to $OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting.csv"        
                 $PsRemotingTargetsAll | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting-Targets.csv"        
             }
 
             Write-Output " -------------------------------------------"
             Write-Output " COLLECTION: ESTABLISH PS REMOTING SESSIONS"
             Write-Output " -------------------------------------------"
-            Write-Output " [+][$Time] - Attempting to establish PS Remoting sessions with $PsRemotingTargetsAllCount computers."
+            Write-Output " [*][$Time] - Attempting to establish PS Remoting sessions with $PsRemotingTargetsAllCount computers."
             $PsRemotingTargetsAll | select ComputerName | 
             Foreach{
 
@@ -597,7 +597,7 @@ function Invoke-PowerHunt
             $SessionCount = (Get-PSSession | where State -like "*Opened*").count
             Get-PSSession | where State -like "*Opened*" | Export-Csv -NoTypeInformation "$OutputDirectory\discovery\Hunt-Target-Computers-PsRemoting-Sessions.csv"        
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time] - $SessionCount PS Remoting sessions were established."
+            Write-Output " [*][$Time] - $SessionCount PS Remoting sessions were established."
             if($SessionCount -eq 0){          
                 Write-Output " [!][$Time] - Aborting operation."
                 break
@@ -610,7 +610,7 @@ function Invoke-PowerHunt
             # Get list of collection modules
             $CollectionModules = Get-ChildItem .\windows\modules\collection 
             $CollectionModulesCount = $CollectionModules | measure | select count -ExpandProperty count
-            Write-Output " [+][$Time] $CollectionModulesCount collection modules will be run against $SessionCount sessions."        
+            Write-Output " [*][$Time] $CollectionModulesCount collection modules will be run against $SessionCount sessions."        
 
             # Load and run each module
             $CurrentModulesCount = 0
@@ -631,7 +631,7 @@ function Invoke-PowerHunt
                 $ModuleStartTime = Get-Date
 
                 # Run module
-                Write-Output " [+][$Time] - `($CurrentModulesCount of $CollectionModulesCount`) $ModuleName"
+                Write-Output " [*][$Time] - `($CurrentModulesCount of $CollectionModulesCount`) $ModuleName"
 
                 $MyCommand = Get-Content $_.fullname -Raw
                 $Results = Invoke-Command -Session (Get-PSSession | where state -like "Opened") -ScriptBlock {Invoke-Expression -Command  "$args"} -ArgumentList $MyCommand -ErrorAction SilentlyContinue                
@@ -693,7 +693,7 @@ function Invoke-PowerHunt
             # Get analysis module count
             $AnalysisModules = Get-ChildItem -Recurse .\windows\modules\analysis 
             $AnalysisModulesCount = $AnalysisModules | measure | select count -ExpandProperty count
-            Write-Output " [+][$Time] $AnalysisModulesCount analysis modules will be run against $CollectionModulesCount data sources."       
+            Write-Output " [*][$Time] $AnalysisModulesCount analysis modules will be run against $CollectionModulesCount data sources."       
 
             # Review each collection module data source
             $CollectionModulesCountP = 0
@@ -707,7 +707,7 @@ function Invoke-PowerHunt
                 $CollectionDataSource = $_.name -replace(".ps1","") -replace("collect-","")
                 $CollectionModuleName = $_.name -replace(".ps1","")
                 $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-                Write-Output " [+][$Time] Data Source `($CollectionModulesCountP of $CollectionModulesCount`): $CollectionDataSource"
+                Write-Output " [*][$Time] Data Source `($CollectionModulesCountP of $CollectionModulesCount`): $CollectionDataSource"
             
                 # Generate data source file path
                 $CollectionModuleFile = $_.name -replace(".ps1",".csv")
@@ -726,9 +726,9 @@ function Invoke-PowerHunt
                 $AnalysisModulesCountT = $AnalysisModulesT | measure | select count -ExpandProperty count    
             
                 if($AnalysisModulesCountT -eq 0){
-                    Write-Output " [+][$Time]   0 search analysis modules exist for this data source." 
+                    Write-Output " [*][$Time]   0 search analysis modules exist for this data source." 
                 }else{
-                    Write-Output " [+][$Time]   $AnalysisModulesCountT search analysis modules found, loading data source."
+                    Write-Output " [*][$Time]   $AnalysisModulesCountT search analysis modules found, loading data source."
 
                     # load the data source data here
                     $CollectedData = Import-Csv $CollectionDataSourcePath
@@ -759,7 +759,7 @@ function Invoke-PowerHunt
 
                     # Load and run analysis module
                     $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
-                    Write-Output " [+][$Time]   - `($AnalysisModulesCountP of $AnalysisModulesCountT`) $AnalysisModuleName"           
+                    Write-Output " [*][$Time]   - `($AnalysisModulesCountP of $AnalysisModulesCountT`) $AnalysisModuleName"           
                 
                     # Get module code
                     $AnalysisCommand = Get-Content $AnalysisModuleFilePath -Raw
@@ -778,9 +778,9 @@ function Invoke-PowerHunt
                 $AnalysisModulesCountT = $AnalysisModulesT | measure | select count -ExpandProperty count    
             
                 if($AnalysisModulesCountT -eq 0){
-                    Write-Output " [+][$Time]   0 stack analysis modules exist for this data source." 
+                    Write-Output " [*][$Time]   0 stack analysis modules exist for this data source." 
                 }else{
-                    Write-Output " [+][$Time]   $AnalysisModulesCountT stack analysis modules found, loading data source."
+                    Write-Output " [*][$Time]   $AnalysisModulesCountT stack analysis modules found, loading data source."
 
                     # load the data source data here
                     $CollectedData = Import-Csv $CollectionDataSourcePath
@@ -811,7 +811,7 @@ function Invoke-PowerHunt
 
                     # Load and run analysis module
                     $Time =  Get-Date -UFormat "%m/%d/%Y %R" 
-                    Write-Output " [+][$Time]   - `($AnalysisModulesCountP of $AnalysisModulesCountT`) $AnalysisModuleName"           
+                    Write-Output " [*][$Time]   - `($AnalysisModulesCountP of $AnalysisModulesCountT`) $AnalysisModuleName"           
                 
                     # Get module code
                     $AnalysisCommand = Get-Content $AnalysisModuleFilePath -Raw
@@ -895,17 +895,17 @@ function Invoke-PowerHunt
 
  
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time]  - Stopping active testing"
-            Write-Output " [+][$Time]  - Terminating $SessionCount PowerShell Remoting sessions." 
+            Write-Output " [*][$Time]  - Stopping active testing"
+            Write-Output " [*][$Time]  - Terminating $SessionCount PowerShell Remoting sessions." 
             Get-PSSession | Disconnect-PSSession -ErrorAction SilentlyContinue | Out-Null
             Get-PSSession | Remove-PSSession -ErrorAction SilentlyContinue | Out-Null
             $Time =  Get-Date -UFormat "%m/%d/%Y %R"
-            Write-Output " [+][$Time]  - All sessions terminated."
+            Write-Output " [*][$Time]  - All sessions terminated."
         
             # Final user status                
             $StopTime = Get-Date
             $ScanDuration = $StopTime - $StartTime        
-            Write-Output " [+][$Time]  - Test duration: $ScanDuration"
+            Write-Output " [*][$Time]  - Test duration: $ScanDuration"
         }
 
         # Show $ModuleOutputSummary
@@ -2762,7 +2762,7 @@ function Convert-DataTableToHtmlTable
     )
 
     # Setup HTML begin
-    Write-Verbose "[+] Creating html top." 
+    Write-Verbose "[*] Creating html top." 
     $HTMLSTART = @"
     <html>
         <head>
@@ -2880,11 +2880,11 @@ function Convert-DataTableToHtmlTable
 "@
     
     # Get list of columns
-    Write-Verbose "[+] Parsing data table columns."
+    Write-Verbose "[*] Parsing data table columns."
     $MyCsvColumns = $DataTable | Get-Member | Where-Object MemberType -like "NoteProperty" | Select-Object Name -ExpandProperty Name
 
     # Print columns creation
-    Write-Verbose "[+] Creating html table columns."   
+    Write-Verbose "[*] Creating html table columns."   
     $HTMLTableHeadStart= "<thead><tr>" 
     $MyCsvColumns |
     ForEach-Object {
@@ -2895,7 +2895,7 @@ function Convert-DataTableToHtmlTable
     $HTMLTableColumn = "$HTMLTableHeadStart$HTMLTableColumn</tr></thead>" 
 
      # Create table rows
-    Write-Verbose "[+] Creating html table rows."     
+    Write-Verbose "[*] Creating html table rows."     
     $HTMLTableRow = $DataTable |
     ForEach-Object {
     
@@ -2919,7 +2919,7 @@ function Convert-DataTableToHtmlTable
     }
 
     # Setup HTML end
-    Write-Verbose "[+] Creating html bottom." 
+    Write-Verbose "[*] Creating html bottom." 
     $HTMLEND = @"
   </tbody>
 </table>
