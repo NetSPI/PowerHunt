@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.62
+# Version: 0.64
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -910,13 +910,49 @@ function Invoke-PowerHunt
         }
 
         # Clean data source 
+        $ModuleOutputSummaryClean = $ModuleOutputSummary |
+        foreach{            
+            
+            # Get variables
+            $AnalyzeModule     = $_.AnalyzeModule
+            $AnalyzeModuleDesc = $_.AnalyzeModuleDesc
+            $CollectModule     = $_.CollectModule
+            $CollectSource     = $_.CollectSource
+            $ComputerCount     = $_.ComputerCount
+            $FindingType       = $_.FindingType
+            $InstanceCount     = $_.InstanceCount
+            $ModuleType        = $_.ModuleType
+
+            # Get length for $CollectSource - apparently not needed for powershell substrings
+            $CollectSourceLen = $CollectSource.Length
+
+            # Get offset of second -; 017-04-wmi-providers
+            $CollectSourceOffSet = 1 + (($CollectSource | select-string "-" -AllMatches).Matches | select index -first 2 -ExpandProperty index | select -last 1)
+            
+            # Select Clean name
+            $CollectSourceNew = $CollectSource.Substring($CollectSourceOffSet).Replace("-"," ").ToUpper()
+
+            # Build object
+            $object = New-Object PSObject
+            $object | add-member AnalyzeModule         $AnalyzeModule
+            $object | add-member AnalyzeModuleDesc     $AnalyzeModuleDesc
+            $object | add-member CollectModule         $CollectModule
+            $object | add-member CollectSource         $CollectSourceNew
+            $object | add-member ComputerCount         $ComputerCount
+            $object | add-member FindingType           $FindingType
+            $object | add-member InstanceCount         $InstanceCount
+            $object | add-member ModuleType            $ModuleType
+
+            # Return object
+            $object 
+        }
 
         # Save summary data to file
-        $ModuleOutputSummary | Export-Csv -NoTypeInformation "$OutputDirectory\Hunt-Module-Summary-Table.csv"
+        $ModuleOutputSummaryClean | Export-Csv -NoTypeInformation "$OutputDirectory\Hunt-Module-Summary-Table.csv"
 
         # Show $ModuleOutputSummary
         if($ShowSummary -and $ModuleOutputSummary){                        
-            $ModuleOutputSummary
+            $ModuleOutputSummaryClean
         }
      }
 }
