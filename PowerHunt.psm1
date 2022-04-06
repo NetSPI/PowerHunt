@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.60
+# Version: 0.62
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -120,6 +120,7 @@ function Invoke-PowerHunt
         $null = $ModuleOutputSummary.Columns.Add("CollectModule")
         $null = $ModuleOutputSummary.Columns.Add("CollectSource")
         $null = $ModuleOutputSummary.Columns.Add("AnalyzeModule")        
+        $null = $ModuleOutputSummary.Columns.Add("AnalyzeModuleDesc")
         $null = $ModuleOutputSummary.Columns.Add("FindingType")
         $null = $ModuleOutputSummary.Columns.Add("InstanceCount")
         $null = $ModuleOutputSummary.Columns.Add("ComputerCount") # Computers with 1 or more instances
@@ -155,7 +156,7 @@ function Invoke-PowerHunt
         Write-Output " ==========================================="
         Write-Output " PowerHunt"
         Write-Output " ==========================================="
-        Write-Output " Author: Scott Sutherland, NetSPI"
+        Write-Output " Author: Scott Sutherland (@_nullbind), NetSPI"
         Write-Output " -------------------------------------------"
         Write-Output " [*][$Time] Authentication Mode : $AuthMode"
         Write-Output " [*][$Time] Computer Target Mode: $TargetMode"        
@@ -655,7 +656,7 @@ function Invoke-PowerHunt
                 }
 
                 # Save summary metrics
-                $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","NA","NA","NA","$ResultsCount","$CollectModuleAffectedComputerCount")
+                $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","NA","NA","NA","NA","$ResultsCount","$CollectModuleAffectedComputerCount")
             }
         }
 
@@ -908,8 +909,10 @@ function Invoke-PowerHunt
             Write-Output " [*][$Time]  - Test duration: $ScanDuration"
         }
 
+        # Clean data source 
+
         # Save summary data to file
-        $ModuleOutputSummary | Export-Csv -NoTypeInformation "$OutputDirectory\Hunt-Module-Summaries.csv"
+        $ModuleOutputSummary | Export-Csv -NoTypeInformation "$OutputDirectory\Hunt-Module-Summary-Table.csv"
 
         # Show $ModuleOutputSummary
         if($ShowSummary -and $ModuleOutputSummary){                        
