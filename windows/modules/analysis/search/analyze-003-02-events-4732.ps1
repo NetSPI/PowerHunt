@@ -11,7 +11,7 @@ $AnalysisModuleDesc = "Place holder description."
 
 # Save result summary
 $AnalysisModuleFileName = $_.name -replace(".ps1","-counts.csv")
-$FinalOutput = $CollectedData  | group PrincipalName | Sort-Object count -Descending | select count,name 
+$FinalOutput = $CollectedData  
 $FinalOutput | Export-Csv -NoTypeInformation "$OutputDirectory\analysis\$AnalysisSubDir\Hunt-$AnalysisModuleFileName"
 
 # Count instances
