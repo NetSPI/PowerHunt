@@ -31,6 +31,7 @@ Primary Todo
 * **find method to get affected computer counts by anomaly/artifact and overall; write sumtable to csv**
 * Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * add html page generation and link to report - function ready/added, just need to add lines for file generation
+* add thresholds to all anomaly modules
 * visual square with coloring mapped to instance density.  ... like asm
 * configure default anomaly threshold - %/count deviation 
 * add rdp, ps remoting, generic netsess collection modules
