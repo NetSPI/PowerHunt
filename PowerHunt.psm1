@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.64
+# Version: 0.65
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -629,6 +629,7 @@ function Invoke-PowerHunt
 
                 # Parse module name from file
                 $ModuleName= $_.name -replace(".ps1","")
+                $CollectionDataSource = $_.name -replace(".ps1","") -replace("collect-","")
                 $ModuleStartTime = Get-Date
 
                 # Run module
@@ -656,7 +657,7 @@ function Invoke-PowerHunt
                 }
 
                 # Save summary metrics
-                $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","NA","NA","NA","NA","$ResultsCount","$CollectModuleAffectedComputerCount")
+                $null = $ModuleOutputSummary.Rows.Add("Collection","$ModuleName","$CollectionDataSource","NA","NA","NA","$ResultsCount","$CollectModuleAffectedComputerCount")
             }
         }
 
