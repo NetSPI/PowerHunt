@@ -21,22 +21,29 @@ BSD 3-Clause
 
 Primary Todo
 --
-**Fixes**
+**Pending Fixes / Priorities**
+* **find method to get affected computer counts by anomaly/artifact and overall; write sumtable to csv**
+* Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
 * fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
 * FIX cast error in field for wmi bindings modules
 * Update $AnalysisModuleDesc in each analysis module.
-
   
-**Features**
-* **find method to get affected computer counts by anomaly/artifact and overall; write sumtable to csv**
-* Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
-* add html page generation and link to report - function ready/added, just need to add lines for file generation
-* add thresholds to all anomaly modules
-* visual square with coloring mapped to instance density.  ... like asm
-* configure default anomaly threshold - %/count deviation 
-* add rdp, ps remoting, generic netsess collection modules
-* exclude dcs swith
-* heat map in html report?
+**Pending Features / Modules**
+
+Collection
+* Add RDP session collection
+* Add PS remoting session collection
+* Add netsess session collection
+  
+Analysis / Core
+* Add thresholds to all anomaly modules - make configurable.
+  
+Report.
+* Excludede DC option.
+* Create square chart, with color desity associated with instances per subnets/system
+* Heat map chart.
+* Timeline chart.
+  
 
 
   
