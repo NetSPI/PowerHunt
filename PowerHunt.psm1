@@ -1,7 +1,7 @@
 # -------------------------------------------
 # Function: Invoke-PowerHunt
 # -------------------------------------------
-# Version: 0.65
+# Version: 0.66
 # Author: Scott Sutherland (@_nullbind), NetSPI 2022
 function Invoke-PowerHunt
 {    
@@ -121,7 +121,7 @@ function Invoke-PowerHunt
         $null = $ModuleOutputSummary.Columns.Add("CollectSource")
         $null = $ModuleOutputSummary.Columns.Add("AnalyzeModule")        
         $null = $ModuleOutputSummary.Columns.Add("AnalyzeModuleDesc")
-        $null = $ModuleOutputSummary.Columns.Add("FindingType")
+        $null = $ModuleOutputSummary.Columns.Add("InstanceType")
         $null = $ModuleOutputSummary.Columns.Add("InstanceCount")
         $null = $ModuleOutputSummary.Columns.Add("ComputerCount") # Computers with 1 or more instances
 
@@ -915,14 +915,15 @@ function Invoke-PowerHunt
         foreach{            
             
             # Get variables
-            $AnalyzeModule     = $_.AnalyzeModule
-            $AnalyzeModuleDesc = $_.AnalyzeModuleDesc
+            $ModuleType        = $_.ModuleType
             $CollectModule     = $_.CollectModule
             $CollectSource     = $_.CollectSource
-            $ComputerCount     = $_.ComputerCount
-            $FindingType       = $_.FindingType
+            $AnalyzeModule     = $_.AnalyzeModule
+            $AnalyzeModuleDesc = $_.AnalyzeModuleDesc
+            $InstanceType      = $_.InstanceType            
             $InstanceCount     = $_.InstanceCount
-            $ModuleType        = $_.ModuleType
+            $ComputerCount     = $_.ComputerCount
+            
 
             # Get length for $CollectSource - apparently not needed for powershell substrings
             $CollectSourceLen = $CollectSource.Length
@@ -935,14 +936,14 @@ function Invoke-PowerHunt
 
             # Build object
             $object = New-Object PSObject
-            $object | add-member AnalyzeModule         $AnalyzeModule
-            $object | add-member AnalyzeModuleDesc     $AnalyzeModuleDesc
+            $object | add-member ModuleType            $ModuleType
             $object | add-member CollectModule         $CollectModule
             $object | add-member CollectSource         $CollectSourceNew
-            $object | add-member ComputerCount         $ComputerCount
-            $object | add-member FindingType           $FindingType
+            $object | add-member AnalyzeModule         $AnalyzeModule
+            $object | add-member AnalyzeModuleDesc     $AnalyzeModuleDesc
+            $object | add-member InstanceType          $InstanceType
             $object | add-member InstanceCount         $InstanceCount
-            $object | add-member ModuleType            $ModuleType
+            $object | add-member ComputerCount         $ComputerCount            
 
             # Return object
             $object 
