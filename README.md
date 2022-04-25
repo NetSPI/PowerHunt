@@ -21,12 +21,11 @@ BSD 3-Clause
 
 Primary Todo
 --
-**Pending Fixes / Priorities**
-* **find method to get affected computer counts by anomaly/artifact and overall; write sumtable to csv**
+**Pending Fixes / Higher Priorities**
 * Create an HTML summary report (summary for discovery(sample), collection, analysis; main page for each with dig in html files)
-* fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
-* FIX cast error in field for wmi bindings modules
-* Update $AnalysisModuleDesc in each analysis module.
+* Fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
+* Fix cast error in field for wmi bindings modules
+* Update $AnalysisModuleDesc in each analysis module to include correct description.
   
 **Pending Features / Modules**
 
