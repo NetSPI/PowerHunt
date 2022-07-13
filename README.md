@@ -26,6 +26,7 @@ Primary Todo
 * Fix groups and user collection on 2008 ps3 vs ps5 - function used are not backwards compatable
 * Fix cast error in field for wmi bindings modules
 * Update $AnalysisModuleDesc in each analysis module to include correct description.
+* Review events for potential additions https://github.com/ANSSI-FR/guide-journalisation-microsoft/blob/main/Standard_WEC_query.xml
   
 **Pending Features / Modules**
 
