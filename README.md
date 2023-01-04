@@ -1,5 +1,5 @@
 # PowerHunt
-<a href="https://github.com/NetSPI/PowerHunt/wiki"><strong>PowerHunt</strong></a> is a modular threat hunting framework written in PowerShell that leverages PowerShell Remoting for data collection on scale. <br><br> 
+<a href="https://github.com/NetSPI/PowerHunt/wiki"><strong>PowerHunt</strong></a> is a modular threat hunting framework written in PowerShell that leverages PowerShell Remoting for data collection at scale. <br><br> 
 It is designed to <strong>identify signs of compromise</strong> based on artifacts left behind by common MITRE ATT&CK techniques, and the collected data can be used to identify anomalies and outliers specific to the target environment.  <em>It was not designed to identify known bad files, domains, or IPs associated with specific APTs/malware, but I'm sure it could be extended to do that.</em> 
 
 It supports functionality to:
