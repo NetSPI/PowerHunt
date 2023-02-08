@@ -28,15 +28,22 @@ Primary Todo
 * Update $AnalysisModuleDesc in each analysis module to include correct description.
 * Review events for potential additions https://github.com/ANSSI-FR/guide-journalisation-microsoft/blob/main/Standard_WEC_query.xml
   
-**Pending Features / Modules**
+**Pending Features / Modules** 
 
-Collection
+Remote Collection Methods
+* WMI
+* SMB/RPC - Create Service
+* SMB/RPC - Create Scheduled Task
+* SMB/RCP - Remote registry
+
+Artifact Collection
 * Add RDP session collection
 * Add PS remoting session collection
 * Add netsess session collection
   
 Analysis / Core
 * Add thresholds to all anomaly modules - make configurable.
+* Sigma rules ingestion.
   
 Report.
 * Excludede DC option.
