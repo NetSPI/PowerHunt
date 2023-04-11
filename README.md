@@ -42,13 +42,13 @@ Artifact Collection
 * Add netsess session collection
 * Add Pcap ingestion 
 * Add ransomware artifcats (files/reg keys)
-* Add contextual LOLBAS process checks
-* Update LOLBAS list for persistence checks
-* Add https://www.loldrivers.io/
-* Add parent / child rules for processes
-* Add network connection rules for processes
 
 Analysis / Core
+* Add contextual LOLBAS process checks
+* Update LOLBAS list for persistence checks
+* Add https://www.loldrivers.io/ checks
+* Add parent / child rules for processes
+* Add network connection rules for processes
 * Add thresholds to all anomaly modules - make configurable.
 * Sigma rules ingestion.
   
