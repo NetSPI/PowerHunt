@@ -51,6 +51,7 @@ Analysis / Core
 * Add network connection rules for processes
 * Add thresholds to all anomaly modules - make configurable.
 * Sigma rules ingestion.
+* Add hidden task hunter 
   
 Report.
 * Excludede DC option.
