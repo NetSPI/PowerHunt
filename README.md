@@ -41,7 +41,7 @@ Artifact Collection
 * Add PS remoting session collection
 * Add netsess session collection
 * Add Pcap ingestion 
-* Add ransomware artifcats (files/reg keys)
+* Add ransomware artifcats (files/reg keys/recovery removal)
 
 Analysis / Core
 * Add contextual LOLBAS process checks
