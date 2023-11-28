@@ -18,6 +18,7 @@ LogMeIn
 ManageEngine
 N-Able
 Ngrok
+netsupport
 PowerAutomate
 Pulseway
 PSEXESVC
