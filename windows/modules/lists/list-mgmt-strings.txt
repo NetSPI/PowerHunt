@@ -7,11 +7,9 @@ csexecsvc
 dameware
 Domotz
 dwrcc
-dwrcs
 DWservice
 Fixme
 Fleetdeck
-Fleetdeck.io
 Itarian
 Level.io
 LogMeIn
