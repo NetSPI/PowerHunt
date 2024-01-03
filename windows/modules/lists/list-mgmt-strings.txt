@@ -1,4 +1,6 @@
 action1
+ammyy
+atera
 Anydesk
 Basecamp
 BeAnywhere
@@ -10,20 +12,26 @@ dwrcc
 DWservice
 Fixme
 Fleetdeck
+glavsoft
+gotomypc
+idrive
 Itarian
 Level.io
 LogMeIn
 ManageEngine
 N-Able
+netsupport
 Ngrok
 netsupport
 PowerAutomate
 Pulseway
 PSEXESVC
 RemComSvc
+remote utilities
 Rport
 Rsocx
 ScreenConnect
+simplehelp
 Sorillus
 Splashtop
 Tactical
