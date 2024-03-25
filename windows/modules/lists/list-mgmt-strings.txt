@@ -2,6 +2,7 @@ action1
 ammyy
 atera
 Anydesk
+ASG
 Basecamp
 BeAnywhere
 ConnectWise
@@ -12,6 +13,7 @@ dwrcc
 DWservice
 Fixme
 Fleetdeck
+GetScreen
 glavsoft
 gotomypc
 idrive
@@ -26,18 +28,26 @@ netsupport
 PowerAutomate
 Pulseway
 PSEXESVC
+RattyRat
 RemComSvc
 remote utilities
 Rport
 Rsocx
+RustDesk
+RustScan
 ScreenConnect
 simplehelp
 Sorillus
 Splashtop
+SSH
 Tactical
 Tailscale
 teams
 TeamViewer
+TightVNC
 tmate
 TNTRemote
+VNC
+Xeox
 ZeroTier
+ZohoAssist
